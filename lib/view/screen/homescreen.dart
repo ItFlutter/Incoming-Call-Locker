@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:incoming_call_locker/cntroller/homescreen_controller.dart';
 import 'package:incoming_call_locker/core/constant/appcolor.dart';
-import 'package:incoming_call_locker/view/widget/home/customtext.dart';
+import 'package:incoming_call_locker/view/widget/home/customcheckpermission.dart';
+import 'package:incoming_call_locker/view/widget/home/customsetscreenlock.dart';
+import 'package:incoming_call_locker/core/shared/customtext.dart';
 import 'package:incoming_call_locker/view/widget/home/switchbuttonenableanddisablelock.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+import '../../controller/homescreen_controller.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -14,10 +18,11 @@ class HomeScreen extends StatelessWidget {
     Get.put(HomeScreenController());
     return Scaffold(
         appBar: AppBar(
-          title: CustomTextHomeScreen(
+          title: CustomText(
             text: "Incoming Call Locker",
-            fontSize: 22.sp,
-            fontWeight: FontWeight.w500,
+            fontSize: 24.sp,
+            color: AppColor.blackColor,
+            fontWeight: FontWeight.w600,
           ),
         ),
         body: GetBuilder<HomeScreenController>(
@@ -28,27 +33,39 @@ class HomeScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
-                    height: 10.h,
+                    height: 15.h,
                   ),
                   Container(
                     padding:
-                        EdgeInsets.symmetric(vertical: 5.h, horizontal: 20.w),
-                    // margin: EdgeInsets.symmetric(
-                    //   vertical: 15.h,
-                    // ),
+                        EdgeInsets.symmetric(vertical: 8.h, horizontal: 10.w),
+                    margin: EdgeInsets.symmetric(horizontal: 5.w),
                     decoration: BoxDecoration(
-                        color: AppColor.greenColor,
-                        borderRadius: BorderRadius.circular(30)),
+                        color: AppColor.primaryColor,
+                        borderRadius: BorderRadius.circular(10)),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        CustomTextHomeScreen(
-                          text: controller.activeSwitchLock == false
-                              ? "Enable Lock"
-                              : "Disable Lock",
-                          color: AppColor.whiteColor,
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.w300,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CustomText(
+                              text: "Enable Call Locker",
+                              color: AppColor.blackColor,
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            SizedBox(
+                              height: 5.h,
+                            ),
+                            CustomText(
+                              text: controller.activeSwitchLock == false
+                                  ? "Locker Disable Now"
+                                  : "Locker Enable",
+                              color: AppColor.blackColor,
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w300,
+                            ),
+                          ],
                         ),
                         SwitchButtonEnableAndDisableLock(
                           onChanged: (value) {
@@ -59,134 +76,86 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(
-                    height: 20.h,
+                    height: 15.h,
                   ),
-                  CustomTextHomeScreen(
-                    text: "SETTINGS",
-                    color: AppColor.whiteColor,
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.w300,
-                  ),
-                  SizedBox(
-                    height: 25.h,
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.security,
-                        color: AppColor.whiteColor,
-                        size: 25.w,
-                      ),
-                      SizedBox(
-                        width: 15.w,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CustomTextHomeScreen(
-                            text: "Security Type",
-                            color: AppColor.whiteColor,
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w300,
-                          ),
-                          DropdownButton(
-                              isDense: true,
-                              iconEnabledColor: AppColor.blackColor,
-                              itemHeight: 50.h,
-                              // value: controller.selectedLockType,
-                              hint: Padding(
-                                padding: EdgeInsets.only(right: 20.w),
-                                child: Text(
-                                  "${controller.selectedLockType} Lock",
-                                  style: const TextStyle(
-                                      color: AppColor.primaryColor),
-                                ),
-                              ),
-                              underline: Container(),
-                              onChanged: (String? value) {
-                                controller.onChangedLockType(value!);
-                              },
-                              dropdownColor: AppColor.whiteColor,
-                              items: ["Passcode", "Pattern"]
-                                  .map(
-                                    (e) => DropdownMenuItem(
-                                        value: e,
-                                        child: CustomTextHomeScreen(
-                                          text: "$e Lock",
-                                        )),
-                                  )
-                                  .toList())
-                        ],
-                      )
-                    ],
+                  CustomText(
+                    text: "Need Permission",
+                    color: AppColor.blackColor,
+                    fontSize: 19.sp,
+                    fontWeight: FontWeight.w600,
                   ),
                   SizedBox(
-                    height: 25.h,
+                    height: 15.h,
                   ),
-                  InkWell(
+                  CustomCheckPermission(
+                    title: "Draw over other app",
+                    description:
+                        "The Draw Over Other App is important for this app. Please grant the permission.",
                     onTap: () {},
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.https,
-                          color: AppColor.whiteColor,
-                          size: 25.w,
-                        ),
-                        SizedBox(
-                          width: 15.w,
-                        ),
-                        CustomTextHomeScreen(
-                          text: "${controller.selectedLockType} Lock",
-                          color: AppColor.whiteColor,
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w300,
-                        ),
-                      ],
-                    ),
+                    isGranted: controller.isDisplayOverOtherAppsGranted,
                   ),
                   SizedBox(
-                    height: 25.h,
+                    height: 10.h,
                   ),
-                  CustomTextHomeScreen(
-                    text: "CONTACT SETTINGS",
-                    color: AppColor.whiteColor,
+                  CustomCheckPermission(
+                    title: "Read phone state and call log",
+                    description:
+                        "The Read Phone State and Read Phone Call Log are important for this app. Please grant the permissions",
+                    onTap: () {
+                      controller.checkPhoneAndCallLogsPermissions();
+                    },
+                    isGranted: controller.isPhoneAndCallLogPermissionsGranted,
+                  ),
+                  SizedBox(
+                    height: 15.h,
+                  ),
+                  CustomText(
+                    text: "Password & Security",
+                    color: AppColor.blackColor,
                     fontSize: 18.sp,
-                    fontWeight: FontWeight.w300,
+                    fontWeight: FontWeight.w600,
                   ),
                   SizedBox(
-                    height: 20.h,
+                    height: 15.h,
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.contact_phone,
-                            color: AppColor.whiteColor,
-                            size: 25.w,
-                          ),
-                          SizedBox(
-                            width: 15.w,
-                          ),
-                          CustomTextHomeScreen(
-                            text: "All Contacts",
-                            color: AppColor.whiteColor,
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w300,
-                          ),
-                        ],
+                      CustomSetScreenLock(
+                        text: "Password \nScreen Lock",
+                        onTap: () {
+                          controller.goToPagePasswordLock();
+                        },
+                        isEnrolled:
+                            controller.storedPassCode != "" ? true : false,
                       ),
-                      Radio(
-                          activeColor: AppColor.primaryColor,
-                          value: "",
-                          groupValue: "",
-                          onChanged: (value) {})
+                      CustomSetScreenLock(
+                        text: "Pattern \nScreen Lock",
+                        onTap: () {
+                          controller.goToPagePatternLock();
+                        },
+                        isEnrolled:
+                            controller.storedPatternCode != "" ? true : false,
+                      ),
                     ],
                   ),
-                  const Divider(
-                    color: AppColor.whiteColor,
-                  )
+                  SizedBox(
+                    height: 15.h,
+                  ),
+                  CustomText(
+                    text: "Calling Setting",
+                    color: AppColor.blackColor,
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  SizedBox(
+                    height: 15.h,
+                  ),
+                  CustomText(
+                    text: "Other Setting",
+                    color: AppColor.blackColor,
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ],
               ),
             );

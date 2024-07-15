@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:incoming_call_locker/cntroller/homescreen_controller.dart';
-
+import '../../../controller/homescreen_controller.dart';
 import '../../../core/constant/appcolor.dart';
 
 class SwitchButtonEnableAndDisableLock extends GetView<HomeScreenController> {
@@ -12,7 +11,7 @@ class SwitchButtonEnableAndDisableLock extends GetView<HomeScreenController> {
   @override
   Widget build(BuildContext context) {
     return Switch(
-        activeColor: AppColor.primaryColor,
+        activeColor: AppColor.blueColor,
         value: controller.activeSwitchLock,
         onChanged: onChanged);
   }
