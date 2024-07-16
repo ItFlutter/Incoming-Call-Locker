@@ -8,4 +8,6 @@ class AppRoutes {
   static const String patternlockScreen = "/patternlock";
   static const String confirmPatternlockScreen = "/confirmpatternlock";
   static const String rePatternlockScreen = "/repatternlock";
+  static const String callingSetting = "/callingsetting";
+  static const String otherSetting = "/othersetting";
 }

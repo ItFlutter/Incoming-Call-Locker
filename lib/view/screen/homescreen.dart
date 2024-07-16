@@ -5,9 +5,7 @@ import 'package:incoming_call_locker/core/constant/appcolor.dart';
 import 'package:incoming_call_locker/view/widget/home/customcheckpermission.dart';
 import 'package:incoming_call_locker/view/widget/home/customsetscreenlock.dart';
 import 'package:incoming_call_locker/core/shared/customtext.dart';
-import 'package:incoming_call_locker/view/widget/home/switchbuttonenableanddisablelock.dart';
-import 'package:permission_handler/permission_handler.dart';
-
+import 'package:incoming_call_locker/core/shared/switchbuttonenableanddisablelock.dart';
 import '../../controller/homescreen_controller.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -67,10 +65,11 @@ class HomeScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                        SwitchButtonEnableAndDisableLock(
+                        SwitchButtonEnableAndDisable(
                           onChanged: (value) {
                             controller.onClickSwitchLock(value);
                           },
+                          value: controller.activeSwitchLock,
                         )
                       ],
                     ),
@@ -141,20 +140,30 @@ class HomeScreen extends StatelessWidget {
                   SizedBox(
                     height: 15.h,
                   ),
-                  CustomText(
-                    text: "Calling Setting",
-                    color: AppColor.blackColor,
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.w600,
+                  InkWell(
+                    onTap: () {
+                      controller.goToPageCallingSetting();
+                    },
+                    child: CustomText(
+                      text: "Calling Setting",
+                      color: AppColor.blackColor,
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   SizedBox(
                     height: 15.h,
                   ),
-                  CustomText(
-                    text: "Other Setting",
-                    color: AppColor.blackColor,
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.w600,
+                  InkWell(
+                    onTap: () {
+                      controller.goToPageOtherSetting();
+                    },
+                    child: CustomText(
+                      text: "Other Setting",
+                      color: AppColor.blackColor,
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ],
               ),

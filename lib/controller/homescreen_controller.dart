@@ -1,10 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:incoming_call_locker/core/constant/approutes.dart';
 import 'package:incoming_call_locker/core/services/myservices.dart';
-
 import '../core/constant/appcolor.dart';
 import '../core/functions/requestpermission.dart';
 import '../core/shared/customtext.dart';
@@ -15,11 +13,43 @@ class HomeScreenController extends GetxController with WidgetsBindingObserver {
   MyServices myServices = Get.find();
   bool isDisplayOverOtherAppsGranted = false;
   bool isPhoneAndCallLogPermissionsGranted = false;
-  bool activeSwitchLock = false;
+  late bool activeSwitchLock;
   // String selectedLockType = "Passcode";
   // String textSwitchLock = "Disable Lock";
   onClickSwitchLock(bool value) async {
-    if (storedPassCode.isEmpty && storedPatternCode.isEmpty) {
+    if (isPhoneAndCallLogPermissionsGranted == false) {
+      activeSwitchLock = false;
+
+      await myServices.sharedPreferences.remove("lockactivited");
+      await Get.defaultDialog(
+        contentPadding: EdgeInsets.only(left: 5.w, right: 5.w),
+        title: "Error",
+        middleText: "Please give permission to the app",
+        cancel: InkWell(
+          onTap: () {
+            Get.back();
+          },
+          child: Padding(
+            padding: EdgeInsets.only(right: 20.w, left: 20.w, bottom: 30.h),
+            child: Container(
+                alignment: Alignment.bottomRight,
+                child: CustomText(
+                  text: "Try again",
+                  color: AppColor.blueColor,
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w500,
+                )),
+          ),
+        ),
+        middleTextStyle: TextStyle(
+          fontSize: 18.sp,
+        ),
+        titleStyle: const TextStyle(
+            fontWeight: FontWeight.bold, color: AppColor.redColor),
+      );
+    } else if (storedPassCode.isEmpty && storedPatternCode.isEmpty) {
+      activeSwitchLock = false;
+      await myServices.sharedPreferences.remove("lockactivited");
       await Get.defaultDialog(
         contentPadding: EdgeInsets.only(left: 5.w, right: 5.w),
         title: "Error",
@@ -48,6 +78,8 @@ class HomeScreenController extends GetxController with WidgetsBindingObserver {
       );
     } else {
       activeSwitchLock = !activeSwitchLock;
+      await myServices.sharedPreferences
+          .setBool("lockactivited", activeSwitchLock);
       print("============================================================");
       print(
           "=====================================activeSwitchLock=======================$activeSwitchLock");
@@ -93,6 +125,14 @@ class HomeScreenController extends GetxController with WidgetsBindingObserver {
     }
   }
 
+  goToPageCallingSetting() {
+    Get.toNamed(AppRoutes.callingSetting);
+  }
+
+  goToPageOtherSetting() {
+    Get.toNamed(AppRoutes.otherSetting);
+  }
+
   goToPagePatternLock() {
     if (storedPatternCode.isEmpty) {
       Get.toNamed(AppRoutes.patternlockScreen);
@@ -104,6 +144,11 @@ class HomeScreenController extends GetxController with WidgetsBindingObserver {
 
   @override
   void onInit() {
+    activeSwitchLock =
+        myServices.sharedPreferences.getBool("lockactivited") ?? false;
+    print("============================================================");
+    print(
+        "=====================================activeSwitchLock=======================$activeSwitchLock");
     storedPassCode =
         myServices.sharedPreferences.getString("storedpasscode") ?? "";
     print("============================================================");
