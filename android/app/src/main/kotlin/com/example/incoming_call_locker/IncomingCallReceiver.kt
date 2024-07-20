@@ -21,9 +21,23 @@ class IncomingCallReceiver: BroadcastReceiver() {
 //            val incomingNumber = intent.extras?.getString("incoming_number")
 
             val incomingNumber = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER )
-            if (state == TelephonyManager.EXTRA_STATE_RINGING ) {
-                // Notify Flutter app about the incoming call
-                methodChannel?.invokeMethod("incomingCall", incomingNumber)
+//            if (state == TelephonyManager.EXTRA_STATE_RINGING ) {
+//                // Notify Flutter app about the incoming call
+//                methodChannel?.invokeMethod("incomingCall", incomingNumber)
+//            }
+            when (state) {
+                TelephonyManager.EXTRA_STATE_RINGING -> {
+                    // Notify Flutter app about the incoming call
+                    methodChannel?.invokeMethod("incomingCall", incomingNumber)
+                }
+//                TelephonyManager.EXTRA_STATE_OFFHOOK -> {
+//                    // Notify Flutter app that the call was answered
+//                    methodChannel?.invokeMethod("callAnswered", incomingNumber)
+//                }
+                TelephonyManager.EXTRA_STATE_IDLE -> {
+                    // Notify Flutter app that the call ended
+                    methodChannel?.invokeMethod("callEnded", incomingNumber)
+                }
             }
         }
     }

@@ -3,13 +3,30 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:incoming_call_locker/core/constant/apptheme.dart';
 import 'package:incoming_call_locker/core/services/myservices.dart';
-
+import 'package:incoming_call_locker/view/screen/showapplock.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'routes.dart';
 
 void main() async {
+  print("============================================================");
+  print("=====================================main=======================");
   WidgetsFlutterBinding.ensureInitialized();
   await initialServices();
   runApp(const MyApp());
+}
+
+SharedPreferences? sharedPref;
+// overlay entry point
+@pragma("vm:entry-point")
+void overlayMain() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  sharedPref = await SharedPreferences.getInstance();
+
+  print("============================================================");
+  print(
+      "=====================================overlayMain=======================");
+  runApp(const ShowAppLock());
 }
 
 class MyApp extends StatelessWidget {

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_overlay_window/flutter_overlay_window.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:incoming_call_locker/core/constant/approutes.dart';
@@ -14,6 +16,10 @@ class HomeScreenController extends GetxController with WidgetsBindingObserver {
   bool isDisplayOverOtherAppsGranted = false;
   bool isPhoneAndCallLogPermissionsGranted = false;
   late bool activeSwitchLock;
+  String status = "";
+  static const channel =
+      MethodChannel("com.example.incoming_call_locker/incomingCall");
+  String callerNumber = "";
   // String selectedLockType = "Passcode";
   // String textSwitchLock = "Disable Lock";
   onClickSwitchLock(bool value) async {
@@ -163,6 +169,42 @@ class HomeScreenController extends GetxController with WidgetsBindingObserver {
 
     // WidgetsBinding.instance.addObserver(this);
     requestPhoneAndCallLogsPermissions();
+    channel.setMethodCallHandler((call) async {
+      switch (call.method) {
+        case 'incomingCall':
+          status = "incomingCall";
+          callerNumber = call.arguments as String;
+          print("============================================================");
+          print(
+              "=====================================callerNumber=======================$callerNumber");
+          break;
+        case 'callEnded':
+          status = "callEnded";
+
+          String incomingNumber = call.arguments;
+          print("============================================================");
+          print(
+              "=====================================incomingNumber=======================$incomingNumber");
+          if (activeSwitchLock == true) {
+            await FlutterOverlayWindow.closeOverlay();
+          }
+          // Handle call ended
+          break;
+        default:
+          print("============================================================");
+          print(
+              "=====================================defaultcallerNumber=======================$callerNumber");
+          throw MissingPluginException('Not implemented: ${call.method}');
+      }
+      if (activeSwitchLock == true && status == "incomingCall") {
+        await FlutterOverlayWindow.showOverlay(
+            alignment: OverlayAlignment.bottomCenter);
+      }
+      if (status == "callEnded") {
+        await FlutterOverlayWindow.closeOverlay();
+      }
+    });
+
     // TODO: implement onInit
     super.onInit();
   }
