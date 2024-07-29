@@ -20,13 +20,11 @@ SharedPreferences? sharedPref;
 @pragma("vm:entry-point")
 void overlayMain() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   sharedPref = await SharedPreferences.getInstance();
-
   print("============================================================");
   print(
       "=====================================overlayMain=======================");
-  runApp(const ShowAppLock());
+  runApp(const OverlayMyApp());
 }
 
 class MyApp extends StatelessWidget {

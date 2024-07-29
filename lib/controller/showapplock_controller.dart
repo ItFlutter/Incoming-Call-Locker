@@ -1,12 +1,15 @@
+import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_overlay_window/flutter_overlay_window.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:incoming_call_locker/core/constant/appcolor.dart';
 
 import '../main.dart';
 
 class ShowAppLockController extends GetxController {
+  StreamController<bool> verificationNotifier =
+      StreamController<bool>.broadcast();
+
   // late SharedPreferences sharedPref;
 
   late String storedPassCode;
@@ -25,6 +28,7 @@ class ShowAppLockController extends GetxController {
       print(
           "============================================================NotValid");
       Get.snackbar("Error", "The pattern not correct",
+          backgroundColor: AppColor.whiteColor,
           margin: EdgeInsets.symmetric(
               vertical: Get.height / 15, horizontal: Get.width / 27));
       // await Get.defaultDialog(
@@ -56,8 +60,46 @@ class ShowAppLockController extends GetxController {
     }
   }
 
+  onPasscodeEntered(String enteredPasscode) async {
+    print("============================================================");
+    print(
+        "=====================================enteredPasscode=======================$enteredPasscode");
+    if (enteredPasscode == storedPassCode) {
+      print("============================================================");
+      print(
+          "============================================================Valid");
+      // verificationNotifier.add(true);
+      await FlutterOverlayWindow.closeOverlay();
+    } else {
+      print("============================================================");
+      print(
+          "============================================================NotValid");
+      Get.snackbar("Error", "The password not correct",
+          backgroundColor: AppColor.whiteColor,
+          margin: EdgeInsets.symmetric(
+              vertical: Get.height / 15, horizontal: Get.width / 27));
+      verificationNotifier.add(false);
+    }
+  }
+
   @override
   void onInit() async {
+    FlutterOverlayWindow.overlayListener.listen((event) {
+      storedPatternCode = event['storedPatternCode'];
+      storedPassCode = event['storedPassCode'];
+      print(
+          "===========================shareDataBetweenOverlayAndMainApp=================================");
+
+      print("storedPatternCode: ${event['storedPatternCode']}");
+      print("storedPassCode: ${event['storedPassCode']}");
+      // Get.delete<ShowAppLockController>();
+      if (event['resetstreamcontroller'] == true) {
+        verificationNotifier.add(false);
+        print(
+            "===========================resetstreamcontroller=================================");
+      }
+      update();
+    });
     storedPatternCode = sharedPref!.getString("storedpatterncode") ?? "";
 
     storedPassCode = sharedPref!.getString("storedpasscode") ?? "";

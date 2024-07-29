@@ -91,7 +91,9 @@ class HomeScreen extends StatelessWidget {
                     title: "Draw over other app",
                     description:
                         "The Draw Over Other App is important for this app. Please grant the permission.",
-                    onTap: () {},
+                    onTap: () {
+                      controller.onClickDisplayOverOtherAppsGranted();
+                    },
                     isGranted: controller.isDisplayOverOtherAppsGranted,
                   ),
                   SizedBox(
@@ -143,7 +145,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                   InkWell(
                     onTap: () {
-                      controller.goToPageCallingSetting();
+                      controller.showCallingSetting();
                     },
                     child: CustomText(
                       text: "Calling Setting",

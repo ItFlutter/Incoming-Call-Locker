@@ -30,12 +30,14 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_overlay_window: ^0.4.4
+  # system_alert_window: ^2.0.0
   get: ^4.6.5
   flutter_screenutil: ^5.7.0
   permission_handler: ^9.2.0
   passcode_screen: ^2.0.1
   shared_preferences: ^2.1.1
   pattern_lock: ^2.0.0
+  contacts_service: ^0.6.3
 
 
   # The following adds the Cupertino Icons font to your application.

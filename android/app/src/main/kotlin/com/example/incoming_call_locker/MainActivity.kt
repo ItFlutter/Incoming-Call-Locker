@@ -1,7 +1,6 @@
 package com.example.incoming_call_locker
 
 
-import android.content.Intent
 import androidx.annotation.NonNull
 import io.flutter.plugins.GeneratedPluginRegistrant
 import io.flutter.embedding.android.FlutterActivity
@@ -21,7 +20,7 @@ class MainActivity: FlutterActivity() {
     override fun configureFlutterEngine(@NonNull flutterEngine:FlutterEngine){
         GeneratedPluginRegistrant.registerWith(flutterEngine);
         val methodChannel =   MethodChannel(flutterEngine.dartExecutor.binaryMessenger,channel)
-        MethodChannelHolder.methodChannel = methodChannel  // Set the MethodChannel in the Singleton
+
 //                .setMethodCallHandler { call, result ->
 //            if(call.method=="playMusic"){
 //                val player=MediaPlayer.create(this,Settings.System.DEFAULT_RINGTONE_URI) as MediaPlayer;
@@ -32,13 +31,10 @@ class MainActivity: FlutterActivity() {
 //                result.notImplemented();
 //            }
 //        }
-//        val incomingCallReceiver = IncomingCallReceiver()
-//        incomingCallReceiver.setMethodChannel(methodChannel)
-//
-//        val filter = IntentFilter(TelephonyManager.ACTION_PHONE_STATE_CHANGED)
-//        registerReceiver(incomingCallReceiver, filter)
-        // Start the service
-        val serviceIntent = Intent(this, CallDetectionService::class.java)
-        startService(serviceIntent)
+        val incomingCallReceiver = IncomingCallReceiver()
+        incomingCallReceiver.setMethodChannel(methodChannel)
+
+        val filter = IntentFilter(TelephonyManager.ACTION_PHONE_STATE_CHANGED)
+        registerReceiver(incomingCallReceiver, filter)
     }
 }

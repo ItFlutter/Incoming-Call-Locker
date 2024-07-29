@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:incoming_call_locker/view/widget/callingsetting/customlisttileselectcontacts.dart';
+import 'package:incoming_call_locker/view/widget/home/customlisttileselectcontacts.dart';
 import 'package:incoming_call_locker/view/widget/othersetting/customlisttileselectsetting.dart';
 import '../../controller/Othersetting_controller.dart';
 import '../../core/constant/appcolor.dart';
@@ -28,7 +28,7 @@ class OtherSetting extends StatelessWidget {
               padding: EdgeInsets.all(8.0.w),
               child: Column(
                 children: [
-                  CustomListTileSelectSetting(
+                  const CustomListTileSelectSetting(
                     title: "Privacy Policy",
                     iconLeading: Icons.lock_outline,
                     iconTrealing: Icons.chevron_right,
@@ -37,7 +37,7 @@ class OtherSetting extends StatelessWidget {
                     height: 1.h,
                     thickness: 1.3,
                   ),
-                  CustomListTileSelectSetting(
+                  const CustomListTileSelectSetting(
                     title: "Share App",
                     iconLeading: Icons.share_outlined,
                     iconTrealing: Icons.chevron_right,
@@ -46,7 +46,7 @@ class OtherSetting extends StatelessWidget {
                     height: 1.h,
                     thickness: 1.3,
                   ),
-                  CustomListTileSelectSetting(
+                  const CustomListTileSelectSetting(
                     title: "Rate Us",
                     iconLeading: Icons.thumb_up_alt_outlined,
                     iconTrealing: Icons.chevron_right,
@@ -55,7 +55,7 @@ class OtherSetting extends StatelessWidget {
                     height: 1.h,
                     thickness: 1.3,
                   ),
-                  CustomListTileSelectSetting(
+                  const CustomListTileSelectSetting(
                     title: "Your Feed Back",
                     iconLeading: Icons.chat_outlined,
                     iconTrealing: Icons.chevron_right,
@@ -64,7 +64,7 @@ class OtherSetting extends StatelessWidget {
                     height: 1.h,
                     thickness: 1.3,
                   ),
-                  CustomListTileSelectSetting(
+                  const CustomListTileSelectSetting(
                     title: "Language Setting",
                     iconLeading: Icons.translate_outlined,
                     iconTrealing: Icons.chevron_right,

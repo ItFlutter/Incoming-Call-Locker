@@ -28,6 +28,7 @@ class CustomSetScreenLock extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CircleAvatar(
+              backgroundColor: AppColor.blueColor,
               maxRadius: 15,
               child: Icon(
                 Icons.https,

@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:incoming_call_locker/core/constant/approutes.dart';
 import 'package:incoming_call_locker/core/services/myservices.dart';
+import 'package:incoming_call_locker/view/widget/home/customdialogshowcallingsetting.dart';
 import '../core/constant/appcolor.dart';
 import '../core/functions/requestpermission.dart';
 import '../core/shared/customtext.dart';
@@ -20,17 +21,20 @@ class HomeScreenController extends GetxController with WidgetsBindingObserver {
   static const channel =
       MethodChannel("com.example.incoming_call_locker/incomingCall");
   String callerNumber = "";
+  String callerName = "";
   // String selectedLockType = "Passcode";
   // String textSwitchLock = "Disable Lock";
   onClickSwitchLock(bool value) async {
-    if (isPhoneAndCallLogPermissionsGranted == false) {
+    if (isPhoneAndCallLogPermissionsGranted == false ||
+        isDisplayOverOtherAppsGranted == false) {
       activeSwitchLock = false;
 
       await myServices.sharedPreferences.remove("lockactivited");
       await Get.defaultDialog(
         contentPadding: EdgeInsets.only(left: 5.w, right: 5.w),
         title: "Error",
-        middleText: "Please give permission to the app",
+        middleText:
+            "Please give All permission to the app and sure give display over app",
         cancel: InkWell(
           onTap: () {
             Get.back();
@@ -122,6 +126,76 @@ class HomeScreenController extends GetxController with WidgetsBindingObserver {
     update();
   }
 
+  onClickDisplayOverOtherAppsGranted() async {
+    isDisplayOverOtherAppsGranted == false
+        ? await FlutterOverlayWindow.requestPermission()
+        : Get.defaultDialog(
+            title: "Success",
+            middleText: "The permissions is granted.",
+            titleStyle: const TextStyle(
+                fontWeight: FontWeight.bold, color: AppColor.greenColor),
+          );
+
+    update();
+  }
+
+  requestDisplayOverOtherApps() async {
+    isDisplayOverOtherAppsGranted =
+        await await FlutterOverlayWindow.isPermissionGranted();
+    print("============================================================");
+    print(
+        "=====================================isDisplayOverOtherAppsGranted=======================$isDisplayOverOtherAppsGranted");
+    if (isDisplayOverOtherAppsGranted == false) {
+      Get.defaultDialog(
+        contentPadding: EdgeInsets.only(left: 5.w, right: 5.w),
+        title: "Warning",
+        middleText:
+            "The Draw Over Other App is important for this app. Please grant the permission.",
+        middleTextStyle: TextStyle(
+          fontSize: 18.sp,
+        ),
+        onCancel: () {
+          Get.back();
+        },
+        textCancel: "Cancel",
+        onConfirm: () async {
+          Get.back();
+          await FlutterOverlayWindow.requestPermission();
+        },
+        textConfirm: "Grant",
+        confirmTextColor: AppColor.greenColor,
+        cancelTextColor: AppColor.redColor,
+        buttonColor: AppColor.whiteColor,
+        titleStyle: const TextStyle(
+            fontWeight: FontWeight.bold, color: AppColor.redColor),
+      );
+    }
+    update();
+  }
+
+  checkDisplayOverOtherAppsGranted() async {
+    isDisplayOverOtherAppsGranted =
+        await FlutterOverlayWindow.isPermissionGranted();
+
+    update();
+  }
+  // checkDisplayOverOtherAppsGranted() async {
+  //   isDisplayOverOtherAppsGranted == false
+  //       ? await FlutterOverlayWindow.requestPermission()
+  //       : Get.defaultDialog(
+  //           title: "Success",
+  //           middleText: "The permissions are granted.",
+  //           titleStyle: const TextStyle(
+  //               fontWeight: FontWeight.bold, color: AppColor.greenColor),
+  //         );
+  //   isDisplayOverOtherAppsGranted =
+  //       await FlutterOverlayWindow.isPermissionGranted();
+  //   print("============================================================");
+  //   print(
+  //       "=====================================isDisplayOverOtherAppsGranted=======================$isDisplayOverOtherAppsGranted");
+  //   update();
+  // }
+
   goToPagePasswordLock() {
     if (storedPassCode.isEmpty) {
       Get.toNamed(AppRoutes.passwordlockScreen);
@@ -131,8 +205,19 @@ class HomeScreenController extends GetxController with WidgetsBindingObserver {
     }
   }
 
-  goToPageCallingSetting() {
-    Get.toNamed(AppRoutes.callingSetting);
+  late int selectedContactType;
+  onSelectContactsType(int type) {
+    print("============================================================");
+    print(
+        "=====================================onSelectContactsType=======================");
+    myServices.sharedPreferences.remove("callingsetting");
+
+    selectedContactType = type;
+    update();
+  }
+
+  showCallingSetting() {
+    Get.dialog(const CustomDialogShowCallingSetting());
   }
 
   goToPageOtherSetting() {
@@ -150,6 +235,11 @@ class HomeScreenController extends GetxController with WidgetsBindingObserver {
 
   @override
   void onInit() {
+    selectedContactType =
+        myServices.sharedPreferences.getInt("callingsetting") ?? 0;
+    print("============================================================");
+    print(
+        "=====================================selectedContactType=======================$selectedContactType");
     activeSwitchLock =
         myServices.sharedPreferences.getBool("lockactivited") ?? false;
     print("============================================================");
@@ -167,27 +257,39 @@ class HomeScreenController extends GetxController with WidgetsBindingObserver {
         "=====================================storedPatternCode=======================$storedPatternCode");
     // myServices.sharedPreferences.clear();
 
-    // WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
     requestPhoneAndCallLogsPermissions();
+    requestDisplayOverOtherApps();
+
     channel.setMethodCallHandler((call) async {
       switch (call.method) {
         case 'incomingCall':
           status = "incomingCall";
-          callerNumber = call.arguments as String;
+
+          callerNumber = call.arguments['number'];
+          callerName = call.arguments['name'];
           print("============================================================");
           print(
               "=====================================callerNumber=======================$callerNumber");
+          print("============================================================");
+          print(
+              "=====================================callerName=======================$callerName");
           break;
         case 'callEnded':
           status = "callEnded";
 
-          String incomingNumber = call.arguments;
+          callerNumber = call.arguments['number'];
+          callerName = call.arguments['name'];
           print("============================================================");
           print(
-              "=====================================incomingNumber=======================$incomingNumber");
-          if (activeSwitchLock == true) {
-            await FlutterOverlayWindow.closeOverlay();
-          }
+              "=====================================callerNumber=======================$callerNumber");
+
+          print("============================================================");
+          print(
+              "=====================================callerName=======================$callerName");
+          // if (activeSwitchLock == true) {
+          //   await FlutterOverlayWindow.closeOverlay();
+          // }
           // Handle call ended
           break;
         default:
@@ -197,10 +299,29 @@ class HomeScreenController extends GetxController with WidgetsBindingObserver {
           throw MissingPluginException('Not implemented: ${call.method}');
       }
       if (activeSwitchLock == true && status == "incomingCall") {
-        await FlutterOverlayWindow.showOverlay(
-            alignment: OverlayAlignment.bottomCenter);
+        if (selectedContactType == 1 && callerName.isEmpty) {
+          await FlutterOverlayWindow.showOverlay(
+              alignment: OverlayAlignment.bottomCenter);
+          await FlutterOverlayWindow.shareData({
+            "storedPassCode": storedPassCode,
+            "storedPatternCode": storedPatternCode
+          });
+        }
+        if (selectedContactType == 0) {
+          await FlutterOverlayWindow.showOverlay(
+              alignment: OverlayAlignment.bottomCenter);
+          await FlutterOverlayWindow.shareData({
+            "storedPassCode": storedPassCode,
+            "storedPatternCode": storedPatternCode
+          });
+        }
       }
-      if (status == "callEnded") {
+      if (status == "callEnded" && activeSwitchLock == true) {
+        await FlutterOverlayWindow.shareData({
+          "storedPassCode": storedPassCode,
+          "storedPatternCode": storedPatternCode,
+          "resetstreamcontroller": true,
+        });
         await FlutterOverlayWindow.closeOverlay();
       }
     });
@@ -209,21 +330,31 @@ class HomeScreenController extends GetxController with WidgetsBindingObserver {
     super.onInit();
   }
 
-  // @override
-  // void onClose() {
-  //   WidgetsBinding.instance.removeObserver(this);
+  @override
+  void onClose() {
+    WidgetsBinding.instance.removeObserver(this);
 
-  //   // TODO: implement onClose
-  //   super.onClose();
-  // }
+    // TODO: implement onClose
+    super.onClose();
+  }
 
-  // @override
-  // void didChangeAppLifecycleState(AppLifecycleState state) {
-  //   print(state);
-  //   if (state == AppLifecycleState.resumed) {
-  //     print("==============================Resumed");
-  //   }
-  //   // TODO: implement didChangeAppLifecycleState
-  //   super.didChangeAppLifecycleState(state);
-  // }
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print(state);
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.paused) {
+      print(
+          "============================================================================");
+
+      print("App moved to background");
+      // Handle app moving to background
+    } else if (state == AppLifecycleState.resumed) {
+      checkDisplayOverOtherAppsGranted();
+      print(
+          "===========================================================================");
+
+      print("App moved to foreground");
+      // Handle app coming back to foreground
+    }
+  }
 }
