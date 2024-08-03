@@ -29,6 +29,9 @@ class CustomDialogShowCallingSetting extends StatelessWidget {
                       value: controller.selectedContactType == 0 ? true : false,
                       onPressedSwitch: (value) {
                         controller.onSelectContactsType(0);
+                        controller.myServices.sharedPreferences
+                            .setInt("callingsetting", 0);
+                        controller.sqlDb.mydeleteDatabase();
                       },
                     ),
                     const Divider(),
@@ -42,6 +45,7 @@ class CustomDialogShowCallingSetting extends StatelessWidget {
                         controller.onSelectContactsType(1);
                         controller.myServices.sharedPreferences
                             .setInt("callingsetting", 1);
+                        controller.sqlDb.mydeleteDatabase();
                       },
                     ),
                     const Divider(),

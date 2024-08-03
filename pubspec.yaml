@@ -38,6 +38,7 @@ dependencies:
   shared_preferences: ^2.1.1
   pattern_lock: ^2.0.0
   contacts_service: ^0.6.3
+  sqflite: ^2.0.3+1
 
 
   # The following adds the Cupertino Icons font to your application.

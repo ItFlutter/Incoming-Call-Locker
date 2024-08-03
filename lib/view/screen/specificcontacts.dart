@@ -21,7 +21,9 @@ class SpecificContacts extends StatelessWidget {
           builder: (controller) {
             return CustomFloatingActionButtonSpecificContacts(
               text: "Select ${controller.contactsSpecified.length}",
-              onPressed: () {},
+              onPressed: () {
+                controller.addContactsSpecifiedToDb();
+              },
             );
           },
         ),

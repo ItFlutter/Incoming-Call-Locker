@@ -100,13 +100,16 @@ class HomeScreen extends StatelessWidget {
                     height: 10.h,
                   ),
                   CustomCheckPermission(
-                    title: "Read phone state and call log",
+                    title: "Read phone state call log and contacts",
                     description:
-                        "The Read Phone State and Read Phone Call Log are important for this app. Please grant the permissions",
+                        "The read phone state call log and contacts are important for this app. Please grant the permissions",
                     onTap: () {
-                      controller.checkPhoneAndCallLogsPermissions();
+                      controller
+                          .checkReadPhoneStateCallLogAndContactsPermissionsHomeScreen();
                     },
-                    isGranted: controller.isPhoneAndCallLogPermissionsGranted,
+                    isGranted: controller
+                            .isReadPhoneStateAndCallLogPermissionsGranted &&
+                        controller.isReadContactsPermissionGranted,
                   ),
                   SizedBox(
                     height: 15.h,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:incoming_call_locker/bindings/initialbindings.dart';
 import 'package:incoming_call_locker/core/constant/apptheme.dart';
 import 'package:incoming_call_locker/core/services/myservices.dart';
 import 'package:incoming_call_locker/view/screen/showapplock.dart';
@@ -24,7 +25,7 @@ void overlayMain() async {
   print("============================================================");
   print(
       "=====================================overlayMain=======================");
-  runApp(const OverlayMyApp());
+  runApp(const ShowAppLock());
 }
 
 class MyApp extends StatelessWidget {
@@ -41,6 +42,7 @@ class MyApp extends StatelessWidget {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Incoming Call Locker',
+          initialBinding: InitialBindings(),
           theme: theme,
           getPages: routes,
         );

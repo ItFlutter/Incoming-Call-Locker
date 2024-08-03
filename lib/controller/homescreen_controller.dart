@@ -3,19 +3,27 @@ import 'package:flutter/services.dart';
 import 'package:flutter_overlay_window/flutter_overlay_window.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:incoming_call_locker/core/class/sqldb.dart';
 import 'package:incoming_call_locker/core/constant/approutes.dart';
 import 'package:incoming_call_locker/core/services/myservices.dart';
 import 'package:incoming_call_locker/view/widget/home/customdialogshowcallingsetting.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../core/constant/appcolor.dart';
-import '../core/functions/requestpermission.dart';
+import '../core/functions/requestreadcontactspermission.dart';
+import '../core/functions/requestreadphonestateandcalllogpermissions.dart';
 import '../core/shared/customtext.dart';
 
 class HomeScreenController extends GetxController with WidgetsBindingObserver {
+  List<String> contactsSpecifiedNamesInDb = [];
+
+  SqlDb sqlDb = Get.find();
   late String storedPassCode;
   late String storedPatternCode;
   MyServices myServices = Get.find();
   bool isDisplayOverOtherAppsGranted = false;
-  bool isPhoneAndCallLogPermissionsGranted = false;
+  bool isReadPhoneStateAndCallLogPermissionsGranted = false;
+  bool isReadContactsPermissionGranted = false;
+
   late bool activeSwitchLock;
   String status = "";
   static const channel =
@@ -25,7 +33,8 @@ class HomeScreenController extends GetxController with WidgetsBindingObserver {
   // String selectedLockType = "Passcode";
   // String textSwitchLock = "Disable Lock";
   onClickSwitchLock(bool value) async {
-    if (isPhoneAndCallLogPermissionsGranted == false ||
+    if (isReadPhoneStateAndCallLogPermissionsGranted == false ||
+        isReadContactsPermissionGranted == false ||
         isDisplayOverOtherAppsGranted == false) {
       activeSwitchLock = false;
 
@@ -34,7 +43,7 @@ class HomeScreenController extends GetxController with WidgetsBindingObserver {
         contentPadding: EdgeInsets.only(left: 5.w, right: 5.w),
         title: "Error",
         middleText:
-            "Please give All permission to the app and sure give display over app",
+            "Please give All permissions to the app and sure give display over app",
         cancel: InkWell(
           onTap: () {
             Get.back();
@@ -105,25 +114,44 @@ class HomeScreenController extends GetxController with WidgetsBindingObserver {
   //   update();
   // }
 
-  requestPhoneAndCallLogsPermissions() async {
-    isPhoneAndCallLogPermissionsGranted = await requestPermission();
-    print("============================================================");
-    print(
-        "=====================================isPhoneAndCallLogPermissionsGranted=======================$isPhoneAndCallLogPermissionsGranted");
+  checkReadPhoneStateCallLogAndContactsPermissionsHomeScreen() async {
+    if (isReadPhoneStateAndCallLogPermissionsGranted == false) {
+      requestReadPhoneStateAndCallLogPermissionsHomeScreen();
+    }
+    if (isReadContactsPermissionGranted == false) {
+      requestReadContactsPermissionHomeScreen();
+    } else {
+      Get.defaultDialog(
+        title: "Success",
+        middleText: "The permissions are granted.",
+        titleStyle: const TextStyle(
+            fontWeight: FontWeight.bold, color: AppColor.greenColor),
+      );
+    }
+
     update();
   }
 
-  checkPhoneAndCallLogsPermissions() async {
-    isPhoneAndCallLogPermissionsGranted == false
-        ? requestPhoneAndCallLogsPermissions()
-        : Get.defaultDialog(
-            title: "Success",
-            middleText: "The permissions are granted.",
-            titleStyle: const TextStyle(
-                fontWeight: FontWeight.bold, color: AppColor.greenColor),
-          );
-
+  requestReadContactsPermissionHomeScreen() async {
+    isReadContactsPermissionGranted = await requestReadContactsPermission();
+    print("============================================================");
+    print(
+        "=====================================isReadContactsPermissionGranted=======================$isReadContactsPermissionGranted");
     update();
+  }
+
+  requestReadPhoneStateAndCallLogPermissionsHomeScreen() async {
+    isReadPhoneStateAndCallLogPermissionsGranted =
+        await requestReadPhoneStateAndCallLogPermissions();
+    print("============================================================");
+    print(
+        "=====================================isReadPhoneStateAndCallLogPermissionsGranted=======================$isReadPhoneStateAndCallLogPermissionsGranted");
+    update();
+  }
+
+  requestAllPermissions() async {
+    await requestReadPhoneStateAndCallLogPermissionsHomeScreen();
+    await requestReadContactsPermissionHomeScreen();
   }
 
   onClickDisplayOverOtherAppsGranted() async {
@@ -170,6 +198,13 @@ class HomeScreenController extends GetxController with WidgetsBindingObserver {
             fontWeight: FontWeight.bold, color: AppColor.redColor),
       );
     }
+    update();
+  }
+
+  checkReadPhoneStateCallLogAndContactsPermissionsWhenAppStateResumed() async {
+    isReadContactsPermissionGranted = await Permission.contacts.isGranted;
+    isReadPhoneStateAndCallLogPermissionsGranted =
+        await Permission.phone.isGranted;
     update();
   }
 
@@ -233,6 +268,27 @@ class HomeScreenController extends GetxController with WidgetsBindingObserver {
     }
   }
 
+  getContactsFromDb() async {
+    List<Map> data = await sqlDb.readData('select * from incomingcalllocker');
+    print("============================================================");
+    print(
+        "=====================================data=======================$data");
+    if (data.isNotEmpty) {
+      contactsSpecifiedNamesInDb.addAll(data.map(
+        (e) => e['name'],
+      ));
+      print("============================================================");
+      print(
+          "=====================================contactsSpecifiedNamesInDb=======================$contactsSpecifiedNamesInDb");
+    }
+  }
+
+  getData() async {
+    if (selectedContactType == 2) {
+      await getContactsFromDb();
+    }
+  }
+
   @override
   void onInit() {
     selectedContactType =
@@ -240,6 +296,7 @@ class HomeScreenController extends GetxController with WidgetsBindingObserver {
     print("============================================================");
     print(
         "=====================================selectedContactType=======================$selectedContactType");
+    getData();
     activeSwitchLock =
         myServices.sharedPreferences.getBool("lockactivited") ?? false;
     print("============================================================");
@@ -258,7 +315,7 @@ class HomeScreenController extends GetxController with WidgetsBindingObserver {
     // myServices.sharedPreferences.clear();
 
     WidgetsBinding.instance.addObserver(this);
-    requestPhoneAndCallLogsPermissions();
+    requestAllPermissions();
     requestDisplayOverOtherApps();
 
     channel.setMethodCallHandler((call) async {
@@ -300,6 +357,16 @@ class HomeScreenController extends GetxController with WidgetsBindingObserver {
       }
       if (activeSwitchLock == true && status == "incomingCall") {
         if (selectedContactType == 1 && callerName.isEmpty) {
+          await FlutterOverlayWindow.showOverlay(
+              alignment: OverlayAlignment.bottomCenter);
+          await FlutterOverlayWindow.shareData({
+            "storedPassCode": storedPassCode,
+            "storedPatternCode": storedPatternCode
+          });
+        }
+        if (selectedContactType == 2 &&
+            callerName.isNotEmpty &&
+            contactsSpecifiedNamesInDb.contains(callerName)) {
           await FlutterOverlayWindow.showOverlay(
               alignment: OverlayAlignment.bottomCenter);
           await FlutterOverlayWindow.shareData({
@@ -349,6 +416,7 @@ class HomeScreenController extends GetxController with WidgetsBindingObserver {
       print("App moved to background");
       // Handle app moving to background
     } else if (state == AppLifecycleState.resumed) {
+      checkReadPhoneStateCallLogAndContactsPermissionsWhenAppStateResumed();
       checkDisplayOverOtherAppsGranted();
       print(
           "===========================================================================");
