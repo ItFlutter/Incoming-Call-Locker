@@ -42,7 +42,8 @@ class CustomSetScreenLock extends StatelessWidget {
             CustomText(
               text: text,
               color: AppColor.blackColor,
-              fontSize: 16.sp,
+              // fontSize: 16.sp,
+              fontSize: 13.sp,
               fontWeight: FontWeight.w600,
             ),
             isEnrolled
