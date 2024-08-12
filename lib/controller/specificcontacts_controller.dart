@@ -158,11 +158,12 @@ class SpecificContactsController extends GetxController {
     if (contacts.isNotEmpty) {
       contactsModel.addAll(contacts.map((e) => ContactsModel(
           name: e.displayName,
-          phone: e.phones!.isNotEmpty
-              ? (e.phones?[0].label == "mobile"
-                  ? (e.phones?[0].value)
-                  : "UnKnown")
-              : "UnKnown",
+          // phone: e.phones!.isNotEmpty
+          //     ? (e.phones?[0].label == "mobile"
+          //         ? (e.phones?[0].value)
+          //         : "UnKnown")
+          //     : "UnKnown",
+          phone: e.phones!.isNotEmpty ? e.phones![0].value : "UnKnown",
           isSelected: false)));
 
       print("============================================================");

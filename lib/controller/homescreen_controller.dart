@@ -384,12 +384,24 @@ class HomeScreenController extends GetxController with WidgetsBindingObserver {
         }
       }
       if (status == "callEnded" && activeSwitchLock == true) {
+        print(
+            "===========================Call Ended HomeScreen=================================");
         await FlutterOverlayWindow.shareData({
           "storedPassCode": storedPassCode,
           "storedPatternCode": storedPatternCode,
           "resetstreamcontroller": true,
         });
         await FlutterOverlayWindow.closeOverlay();
+
+        // if (myServices.sharedPreferences.getString("startactivity") ==
+        //     "start") {
+        //   print(
+        //       "===========================App Started From Android And Call Ended=================================");
+        //   await myServices.sharedPreferences.remove("startactivity");
+        //   print(
+        //       "=====================================startactivity=======================${myServices.sharedPreferences.getString("startactivity")}");
+        //   SystemNavigator.pop();
+        // }
       }
     });
 

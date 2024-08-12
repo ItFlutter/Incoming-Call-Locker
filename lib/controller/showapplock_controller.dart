@@ -9,7 +9,6 @@ import '../main.dart';
 class ShowAppLockController extends GetxController {
   StreamController<bool> verificationNotifier =
       StreamController<bool>.broadcast();
-
   // late SharedPreferences sharedPref;
 
   late String storedPassCode;
@@ -22,7 +21,20 @@ class ShowAppLockController extends GetxController {
       print("============================================================");
       print(
           "============================================================Valid");
+      // String callerNumber = sharedPref!.getString('caller_number') ?? '';
+      // String callerName = sharedPref!.getString('caller_name') ?? '';
+      // if (callerNumber.isNotEmpty && callerName.isNotEmpty) {
+      //   exit(0);
+      // }
       await FlutterOverlayWindow.closeOverlay();
+      // if (sharedPref!.getString("startactivity") == "start") {
+      //   print(
+      //       "===========================App Started From Android Call Ended And pattern valid =================================");
+      //   await sharedPref!.remove("startactivity");
+      //   print(
+      //       "=====================================startactivity=======================${sharedPref!.getString("startactivity")}");
+      //   exit(0);
+      // }
     } else {
       print("============================================================");
       print(
@@ -69,7 +81,33 @@ class ShowAppLockController extends GetxController {
       print(
           "============================================================Valid");
       // verificationNotifier.add(true);
+      // String callerNumber = sharedPref!.getString('caller_number') ?? '';
+      // String callerName = sharedPref!.getString('caller_name') ?? '';
+      // if (callerNumber.isNotEmpty && callerName.isNotEmpty) {
+      //   exit(0);
+      // }
       await FlutterOverlayWindow.closeOverlay();
+      // SystemNavigator.pop();
+
+      // MyServices myServices = Get.find();
+      // print(
+      //     "=====================================startactivity=======================$startactivity");
+      // if (startactivity== "start") {
+      //   print(
+      //       "===========================App Started From Android Call Ended And password valid =================================");
+      //   await sharedPref!.remove("startactivity");
+      //   print(
+      //       "=====================================startactivity=======================${sharedPref!.getString("startactivity")}");
+      //   SystemNavigator.pop();
+
+      //   // const channel =
+      //   //     MethodChannel("com.example.incoming_call_locker/incomingCall");
+      //   // try {
+      //   //   await channel.invokeMethod('moveToBackground');
+      //   // } on PlatformException catch (e) {
+      //   //   print("Failed to move app to background: '${e.message}'.");
+      //   // }
+      // }
     } else {
       print("============================================================");
       print(
@@ -100,6 +138,11 @@ class ShowAppLockController extends GetxController {
       }
       update();
     });
+    String callerNumber = sharedPref!.getString('caller_number') ?? '';
+    String callerName = sharedPref!.getString('caller_name') ?? '';
+    if (callerNumber.isNotEmpty && callerName.isNotEmpty) {
+      verificationNotifier.add(false);
+    }
     storedPatternCode = sharedPref!.getString("storedpatterncode") ?? "";
 
     storedPassCode = sharedPref!.getString("storedpasscode") ?? "";

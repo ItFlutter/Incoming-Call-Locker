@@ -40,40 +40,36 @@ class ShowAppLock extends StatelessWidget {
         "===================================height=========================${Get.height}");
     Get.put(ShowAppLockController());
 
-    return ScreenUtilInit(
-      designSize: const Size(360, 690),
-      minTextAdapt: true,
-      splitScreenMode: true,
-      builder: (_, child) {
-        return GetMaterialApp(
-            debugShowCheckedModeBanner: false,
-            home: Scaffold(
-              body: GetBuilder<ShowAppLockController>(
-                builder: (controller) {
-                  print(
-                      "===================================heightGetBuilder=========================${Get.height}");
-                  return controller.storedPatternCode.isNotEmpty
-                      ? PatternLockWidget(onInputComplete: (List<int> input) {
-                          controller.onPatterncodeEntered(input);
-                        })
-                      : controller.storedPassCode.isNotEmpty
-                          ? SizedBox(
-                              // width: 200,
-                              height: Get.height,
-                              child: PasswordCodeWidget(
-                                  title: "Enter Password",
-                                  passwordEnteredCallback:
-                                      (String passwordEntered) {
-                                    controller
-                                        .onPasscodeEntered(passwordEntered);
-                                  },
-                                  shouldTriggerVerification:
-                                      controller.verificationNotifier.stream))
-                          : Container();
-                },
-              ),
-            ));
-      },
-    );
+    return GetMaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
+            body: GetBuilder<ShowAppLockController>(builder: (controller) {
+          print(
+              "===================================heightGetBuilder=========================${Get.height}");
+          return ScreenUtilInit(
+            designSize: const Size(360, 690),
+            minTextAdapt: true,
+            splitScreenMode: true,
+            builder: (_, child) {
+              return controller.storedPatternCode.isNotEmpty
+                  ? PatternLockWidget(onInputComplete: (List<int> input) {
+                      controller.onPatterncodeEntered(input);
+                    })
+                  : controller.storedPassCode.isNotEmpty
+                      ? SizedBox(
+                          // width: 200,
+                          height: Get.height,
+                          child: PasswordCodeWidget(
+                              title: "Enter Password",
+                              passwordEnteredCallback:
+                                  (String passwordEntered) {
+                                controller.onPasscodeEntered(passwordEntered);
+                              },
+                              shouldTriggerVerification:
+                                  controller.verificationNotifier.stream))
+                      : Container();
+            },
+          );
+        })));
   }
 }
