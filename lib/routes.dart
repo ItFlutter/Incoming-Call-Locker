@@ -33,5 +33,5 @@ List<GetPage<dynamic>>? routes = [
       page: () => const RePatternLockScreen()),
   GetPage(
       name: AppRoutes.specificContacts, page: () => const SpecificContacts()),
-  GetPage(name: AppRoutes.otherSetting, page: () => const OtherSetting()),
+  // GetPage(name: AppRoutes.otherSetting, page: () => const OtherSetting()),
 ];

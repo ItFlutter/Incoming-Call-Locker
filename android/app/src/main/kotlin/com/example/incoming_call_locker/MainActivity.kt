@@ -1,4 +1,5 @@
 package com.example.incoming_call_locker
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import androidx.annotation.NonNull
@@ -12,6 +13,8 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.media.MediaPlayer
+import android.net.Uri
+import android.os.PowerManager
 import android.provider.Settings
 import android.view.WindowManager
 import androidx.annotation.RequiresApi
@@ -45,8 +48,27 @@ class MainActivity: FlutterActivity() {
 //                result.notImplemented();
 //            }
 //        }
+//fun requestIgnoreBatteryOptimizations(context: Context) {
+//    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//        val packageName = context.packageName
+//        val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+//        intent.data = Uri.parse("package:$packageName")
+//        context.startActivity(intent)
+//    }
+//}
+//    @RequiresApi(Build.VERSION_CODES.M)
+//    @SuppressLint("ServiceCast")
+//    fun isIgnoringBatteryOptimizations(context: Context): Boolean {
+//        val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+//        val packageName = context.packageName
+//        return powerManager.isIgnoringBatteryOptimizations(packageName)
+//    }
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+//    if (!isIgnoringBatteryOptimizations(this)) {
+//        requestIgnoreBatteryOptimizations(this)
+//    }
         isAppRunning = true
         Log.d("MainActivity", "onCreate")
         val callerNumber = intent.getStringExtra("caller_number") ?: ""

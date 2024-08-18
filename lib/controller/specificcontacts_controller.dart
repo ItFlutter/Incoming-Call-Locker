@@ -154,17 +154,39 @@ class SpecificContactsController extends GetxController {
     contacts = await ContactsService.getContacts();
     print("============================================================");
     print(
-        "=====================================contacts=======================${contacts}");
+        "=====================================contacts=======================$contacts");
     if (contacts.isNotEmpty) {
-      contactsModel.addAll(contacts.map((e) => ContactsModel(
-          name: e.displayName,
-          // phone: e.phones!.isNotEmpty
-          //     ? (e.phones?[0].label == "mobile"
-          //         ? (e.phones?[0].value)
-          //         : "UnKnown")
-          //     : "UnKnown",
-          phone: e.phones!.isNotEmpty ? e.phones![0].value : "UnKnown",
-          isSelected: false)));
+      contactsModel.addAll(contacts.map((e) {
+        if (e.phones!.isEmpty) {
+          print(
+              "===========================EmptyListPhones=================================");
+          print(
+              "=====================================name of contact empty=======================${e.displayName}");
+
+          return ContactsModel(
+              name: e.displayName ?? "UnKnown",
+              // phone: e.phones!.isNotEmpty
+              //     ? (e.phones?[0].label == "mobile"
+              //         ? (e.phones?[0].value)
+              //         : "UnKnown")
+              //     : "UnKnown",
+              // phone: e.phones!.isNotEmpty ? e.phones![0].value : "UnKnown",
+              phone: "UnKnown",
+              isSelected: false);
+        } else {
+          return ContactsModel(
+              name: e.displayName ?? "UnKnown",
+              // phone: e.phones!.isNotEmpty
+              //     ? (e.phones?[0].label == "mobile"
+              //         ? (e.phones?[0].value)
+              //         : "UnKnown")
+              //     : "UnKnown",
+              // phone: e.phones!.isNotEmpty ? e.phones![0].value : "UnKnown",
+              phone: e.phones![0].value ?? "UnKnown",
+              isSelected: false);
+        }
+        ;
+      }));
 
       print("============================================================");
       print(
@@ -179,7 +201,8 @@ class SpecificContactsController extends GetxController {
         }
       }
     } else {
-      Get.snackbar("warning", "Something went wrong");
+      Get.snackbar(
+          "warning", "Something went wrong you probably don't have contacts");
     }
     update();
   }

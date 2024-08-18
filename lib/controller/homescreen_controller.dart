@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:incoming_call_locker/core/class/sqldb.dart';
 import 'package:incoming_call_locker/core/constant/approutes.dart';
 import 'package:incoming_call_locker/core/services/myservices.dart';
-import 'package:incoming_call_locker/view/widget/home/customdialogshowcallingsetting.dart';
+import 'package:incoming_call_locker/view/widget/home/callingsetting.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../core/constant/appcolor.dart';
 import '../core/functions/requestreadcontactspermission.dart';
@@ -251,13 +251,13 @@ class HomeScreenController extends GetxController with WidgetsBindingObserver {
     update();
   }
 
-  showCallingSetting() {
-    Get.dialog(const CustomDialogShowCallingSetting());
-  }
+  // showCallingSetting() {
+  //   Get.dialog(const CustomDialogShowCallingSetting());
+  // }
 
-  goToPageOtherSetting() {
-    Get.toNamed(AppRoutes.otherSetting);
-  }
+  // goToPageOtherSetting() {
+  //   Get.toNamed(AppRoutes.otherSetting);
+  // }
 
   goToPagePatternLock() {
     if (storedPatternCode.isEmpty) {
@@ -289,6 +289,11 @@ class HomeScreenController extends GetxController with WidgetsBindingObserver {
     }
   }
 
+  requestNecessaryPermissionsHomeScreen() async {
+    await requestAllPermissions();
+    await requestDisplayOverOtherApps();
+  }
+
   @override
   void onInit() {
     selectedContactType =
@@ -315,8 +320,7 @@ class HomeScreenController extends GetxController with WidgetsBindingObserver {
     // myServices.sharedPreferences.clear();
 
     WidgetsBinding.instance.addObserver(this);
-    requestAllPermissions();
-    requestDisplayOverOtherApps();
+    requestNecessaryPermissionsHomeScreen();
 
     channel.setMethodCallHandler((call) async {
       switch (call.method) {

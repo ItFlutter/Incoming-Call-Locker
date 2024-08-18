@@ -9,5 +9,5 @@ class AppRoutes {
   static const String confirmPatternlockScreen = "/confirmpatternlock";
   static const String rePatternlockScreen = "/repatternlock";
   static const String specificContacts = "/specificcontacts";
-  static const String otherSetting = "/othersetting";
+  // static const String otherSetting = "/othersetting";
 }

@@ -41,8 +41,11 @@ class RePasswordLockScreen extends StatelessWidget {
                   ),
                 ],
               ),
+              // SizedBox(
+              //   height: 166.h,
+              // ),
               SizedBox(
-                height: 166.h,
+                height: 130.h,
               ),
               Expanded(
                   child: PasscodeWidget(

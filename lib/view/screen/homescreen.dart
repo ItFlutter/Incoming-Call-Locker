@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:incoming_call_locker/core/constant/appcolor.dart';
+import 'package:incoming_call_locker/core/constant/appimageasset.dart';
 import 'package:incoming_call_locker/view/widget/home/customcheckpermission.dart';
 import 'package:incoming_call_locker/view/widget/home/customsetscreenlock.dart';
 import 'package:incoming_call_locker/core/shared/customtext.dart';
 import 'package:incoming_call_locker/core/shared/switchbuttonenableanddisablelock.dart';
 import '../../controller/homescreen_controller.dart';
+import '../widget/home/callingsetting.dart';
+import '../widget/home/customlisttileselectsetting.dart';
+import '../widget/home/customlisttileselectsetting.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -25,9 +29,9 @@ class HomeScreen extends StatelessWidget {
         ),
         body: GetBuilder<HomeScreenController>(
           builder: (controller) {
-            return Container(
-              margin: EdgeInsets.symmetric(horizontal: 20.w),
-              child: SingleChildScrollView(
+            return SingleChildScrollView(
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 20.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -146,30 +150,70 @@ class HomeScreen extends StatelessWidget {
                     SizedBox(
                       height: 15.h,
                     ),
-                    InkWell(
-                      onTap: () {
-                        controller.showCallingSetting();
-                      },
-                      child: CustomText(
-                        text: "Calling Setting",
-                        color: AppColor.blackColor,
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.w600,
-                      ),
+                    CustomText(
+                      text: "Calling Setting",
+                      color: AppColor.blackColor,
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w600,
                     ),
+                    const CallingSetting(),
                     SizedBox(
                       height: 15.h,
                     ),
-                    InkWell(
-                      onTap: () {
-                        controller.goToPageOtherSetting();
-                      },
-                      child: CustomText(
-                        text: "Other Setting",
-                        color: AppColor.blackColor,
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.w600,
-                      ),
+                    CustomText(
+                      text: "Other Setting",
+                      color: AppColor.blackColor,
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    Column(
+                      children: [
+                        CustomListTileSelectSetting(
+                          onTap: () {
+                            Get.dialog(InteractiveViewer(
+                                child: Image.asset(AppImageAsset.guide)));
+                          },
+                          title: "Notes For Some Devices (Xiaomi ,...) ",
+                          iconLeading: Icons.chat_outlined,
+                          iconTrealing: Icons.chevron_right,
+                        ),
+                        Divider(
+                          height: 0.1.h,
+                          thickness: 1.5.h,
+                        ),
+                        const CustomListTileSelectSetting(
+                          title: "Privacy Policy",
+                          iconLeading: Icons.lock_outline,
+                          iconTrealing: Icons.chevron_right,
+                        ),
+                        Divider(
+                          height: 0.1.h,
+                          thickness: 1.5.h,
+                        ),
+                        const CustomListTileSelectSetting(
+                          title: "Share App",
+                          iconLeading: Icons.share_outlined,
+                          iconTrealing: Icons.chevron_right,
+                        ),
+                        Divider(
+                          height: 0.1.h,
+                          thickness: 1.5.h,
+                        ),
+                        const CustomListTileSelectSetting(
+                          title: "Rate Us",
+                          iconLeading: Icons.thumb_up_alt_outlined,
+                          iconTrealing: Icons.chevron_right,
+                        ),
+                        Divider(
+                          height: 0.1.h,
+                          thickness: 1.5.h,
+                        ),
+                        const CustomListTileSelectSetting(
+                          title: "Language Setting",
+                          iconLeading: Icons.translate_outlined,
+                          iconTrealing: Icons.chevron_right,
+                        ),
+                      ],
                     ),
                   ],
                 ),

@@ -1,6 +1,6 @@
 class ContactsModel {
-  String? name;
-  String? phone;
+  String name;
+  String phone;
   bool isSelected;
   ContactsModel({
     required this.name,

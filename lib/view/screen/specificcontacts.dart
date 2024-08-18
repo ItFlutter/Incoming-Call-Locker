@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:incoming_call_locker/controller/specificcontacts_controller.dart';
-import 'package:incoming_call_locker/view/widget/othersetting/customlisttileselectsetting.dart';
 import 'package:incoming_call_locker/view/widget/specificcontacts/customfloatingactionbuttonspecificcontacts.dart';
 import 'package:incoming_call_locker/view/widget/specificcontacts/customlisttilespecificontacts.dart';
 import 'package:incoming_call_locker/view/widget/specificcontacts/customloadingspecificcontacts.dart';
@@ -45,8 +44,8 @@ class SpecificContacts extends StatelessWidget {
                       return Column(
                         children: [
                           CustomListTileSpecificContacts(
-                            title: controller.contactsModel[index].name!,
-                            subTitle: controller.contactsModel[index].phone!,
+                            title: controller.contactsModel[index].name,
+                            subTitle: controller.contactsModel[index].phone,
                             iconSelectedOrNot:
                                 controller.contactsModel[index].isSelected
                                     ? const Icon(
