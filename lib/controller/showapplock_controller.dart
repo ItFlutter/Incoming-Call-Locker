@@ -155,4 +155,11 @@ class ShowAppLockController extends GetxController {
     // TODO: implement onInit
     super.onInit();
   }
+
+  @override
+  void onClose() {
+    // TODO: implement onClose
+    verificationNotifier.close();
+    super.onClose();
+  }
 }

@@ -1,5 +1,4 @@
 package com.example.incoming_call_locker
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import androidx.annotation.NonNull
@@ -12,12 +11,13 @@ import android.telephony.TelephonyManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import androidx.annotation.RequiresApi
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.PowerManager
 import android.provider.Settings
 import android.view.WindowManager
-import androidx.annotation.RequiresApi
+import android.annotation.SuppressLint
 @Suppress("DEPRECATION")
 class MainActivity: FlutterActivity() {
     //    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
@@ -34,11 +34,13 @@ class MainActivity: FlutterActivity() {
         Log.d("MainActivity", "configureFlutterEngine")
         GeneratedPluginRegistrant.registerWith(flutterEngine);
         val methodChannel =   MethodChannel(flutterEngine.dartExecutor.binaryMessenger,channel)
-         incomingCallReceiver = IncomingCallReceiver()
-        incomingCallReceiver.setMethodChannel(methodChannel)
+        incomingCallReceiver = IncomingCallReceiver().apply {
+            setMethodChannel(methodChannel)
+        }
         val filter = IntentFilter(TelephonyManager.ACTION_PHONE_STATE_CHANGED)
-        registerReceiver(incomingCallReceiver, filter)}
-//                .setMethodCallHandler { call, result ->
+        registerReceiver(incomingCallReceiver, filter)
+    }
+    //                .setMethodCallHandler { call, result ->
 //            if(call.method=="playMusic"){
 //                val player=MediaPlayer.create(this,Settings.System.DEFAULT_RINGTONE_URI) as MediaPlayer;
 ////This Not Work   player.setLooping(true);
@@ -78,21 +80,23 @@ class MainActivity: FlutterActivity() {
         if (callerNumber.isNotEmpty()) {
             // Store the data in SharedPreferences
             val sharedPreferences = getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
-            val editor = sharedPreferences.edit()
-            editor.putString("flutter.caller_number", callerNumber)
-            editor.putString("flutter.caller_name", callerName)
-            editor.apply()
-            val startActivity= sharedPreferences.getString("flutter.startactivity", "");
-            if(startActivity=="start"){
-                Log.d("MainActivity", "startActivity==start")
-                val editor = sharedPreferences.edit()
-                // Remove the key "flutter.startactivity"
-                 editor.remove("flutter.startactivity")
-                 // Apply the changes
-                 editor.apply()
-                Log.d("MainActivity", "Remove startactivity ${sharedPreferences.getString("flutter.startactivity", "")}")
-                moveTaskToBack(true)
+            val editor = sharedPreferences.edit().apply {
+                putString("flutter.caller_number", callerNumber)
+                putString("flutter.caller_name", callerName)
+                apply()
             }
+                            moveTaskToBack(true)
+//            val startActivity= sharedPreferences.getString("flutter.startactivity", "");
+//            if(startActivity=="start"){
+//                Log.d("MainActivity", "startActivity==start")
+//                val editor = sharedPreferences.edit()
+//                // Remove the key "flutter.startactivity"
+//                 editor.remove("flutter.startactivity")
+//                 // Apply the changes
+//                 editor.apply()
+//                Log.d("MainActivity", "Remove startactivity ${sharedPreferences.getString("flutter.startactivity", "")}")
+//                moveTaskToBack(true)
+//            }
 //            // Add flags to show the activity over the lock screen
 //            window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED)
 //            window.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD)
@@ -115,7 +119,5 @@ class MainActivity: FlutterActivity() {
         isAppRunning = false
 //        flutterEngine.destroy()
     }
-    fun isFlutterAppRunning(): Boolean {
-        return isAppRunning
-    }
+    fun isFlutterAppRunning(): Boolean = isAppRunning
 }

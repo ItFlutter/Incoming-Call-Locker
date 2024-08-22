@@ -1,15 +1,22 @@
 package com.example.incoming_call_locker
 import android.annotation.SuppressLint
-import android.content.*
+import android.app.Activity
+import android.content.BroadcastReceiver
+import android.content.ContentResolver
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.provider.ContactsContract
 import android.telephony.TelephonyManager
 import android.util.Log
 import io.flutter.plugin.common.MethodChannel
+import androidx.core.app.ActivityCompat.finishAffinity
 import android.content.Context.POWER_SERVICE
 import android.content.Context.TELEPHONY_SERVICE
 import android.os.PowerManager
-import androidx.core.app.ActivityCompat.finishAffinity
-import flutter.overlay.window.flutter_overlay_window.OverlayService
+import androidx.core.app.ActivityCompat.finishAfterTransition
+import kotlin.system.exitProcess
+
 @Suppress("DEPRECATION")
 class IncomingCallReceiver: BroadcastReceiver() {
     private var methodChannel: MethodChannel? = null
@@ -17,9 +24,8 @@ class IncomingCallReceiver: BroadcastReceiver() {
         Log.d("IncomingCallReceiver", "setMethodChannel")
         methodChannel = channel
     }
-    //        companion object {
-//    }
     override fun onReceive(context: Context, intent: Intent) {
+        val sharedPreferences: SharedPreferences = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
         Log.d("IncomingCallReceiver", "onReceive called")
         if (intent.action == TelephonyManager.ACTION_PHONE_STATE_CHANGED) {
             val state = intent.getStringExtra(TelephonyManager.EXTRA_STATE)
@@ -47,7 +53,7 @@ class IncomingCallReceiver: BroadcastReceiver() {
                             methodChannel?.invokeMethod("incomingCall", mapOf("number" to incomingNumber, "name" to callerName))
                         } else {
                             Log.d("IncomingCallReceiver", "The Flutter app is not running")
-                            val sharedPreferences: SharedPreferences = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
+
                             val lockactivited= sharedPreferences.getBoolean("flutter.lockactivited", false)
                             val callingsetting= sharedPreferences.getLong("flutter.callingsetting", 0).toInt()
                             if(lockactivited==true){
@@ -59,7 +65,7 @@ class IncomingCallReceiver: BroadcastReceiver() {
                                     val flutterIntent = Intent(context, MainActivity::class.java)
                                     flutterIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
                                     flutterIntent.putExtra("caller_number", incomingNumber)
-                                    flutterIntent.putExtra("caller_name", callerName)
+//                                    flutterIntent.putExtra("caller_name", callerName)
                                     context.startActivity(flutterIntent)
                                 }
                                 if(callingsetting==0) {
@@ -113,6 +119,30 @@ class IncomingCallReceiver: BroadcastReceiver() {
                         // Notify Flutter app that the call ended
                         Log.d("IncomingCallReceiver", "Call ended from $incomingNumber")
                         methodChannel?.invokeMethod("callEnded", mapOf("number" to incomingNumber, "name" to callerName))
+                        val startActivity= sharedPreferences.getString("flutter.startactivity", "");
+                        if(startActivity=="start"){
+                            Log.d("IncomingCallReceiver", "startActivity==start")
+                            val editor = sharedPreferences.edit()
+                            // Remove the key "flutter.startactivity"
+                            editor.remove("flutter.startactivity")
+                            // Apply the changes
+                            editor.apply()
+                            Log.d("IncomingCallReceiver", "Remove startactivity ${sharedPreferences.getString("flutter.startactivity", "")}")
+                            // Stop the OverlayService when the call ends
+//                            val overlayIntent = Intent(context, OverlayService::class.java)
+//                            context.stopService(overlayIntent)
+                            // Close the app after the call ends
+//                            if (context is Activity) {
+////                                finishAffinity(context)
+//                                exitProcess(0)
+//                                Log.d("IncomingCallReceiver", "App is closing.")
+//                            }
+//                        exitProcess(0)
+                        }else{
+                            methodChannel?.invokeMethod("callEnded", mapOf("number" to incomingNumber, "name" to callerName))
+
+                        }
+
     //                        val sharedPreferences: SharedPreferences = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
     //                        val startActivity= sharedPreferences.getString("flutter.startactivity", "");
     //                        if(startActivity=="start"){

@@ -9,15 +9,22 @@ import android.util.Log
 class BootReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
-
         if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
-            Log.d("BootCompletedReceiver", "Device booted, starting IncomingCallReceiverService")
-            val serviceIntent = Intent(context, IncomingCallReceiverService::class.java)
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                context.startForegroundService(serviceIntent)
-            } else {
-                context.startService(serviceIntent)
-            }
+            handleBootCompleted(context)
+        }
+    }
+
+    private fun handleBootCompleted(context: Context) {
+        Log.d("BootReceiver", "Device booted, starting IncomingCallReceiverService")
+        val serviceIntent = Intent(context, IncomingCallReceiverService::class.java)
+        startServiceBasedOnVersion(context, serviceIntent)
+    }
+
+    private fun startServiceBasedOnVersion(context: Context, serviceIntent: Intent) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            context.startForegroundService(serviceIntent)
+        } else {
+            context.startService(serviceIntent)
         }
     }
 }

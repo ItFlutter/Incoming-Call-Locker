@@ -170,8 +170,22 @@ class HomeScreen extends StatelessWidget {
                       children: [
                         CustomListTileSelectSetting(
                           onTap: () {
-                            Get.dialog(InteractiveViewer(
-                                child: Image.asset(AppImageAsset.guide)));
+                            Get.dialog(Column(children: [
+                              InteractiveViewer(
+                                  child: Image.asset(AppImageAsset.guide)),
+                              Expanded(
+                                child: Container(
+                                  color: const Color(0xfffdfbfe),
+                                  child: CustomText(
+                                    text:
+                                        "Please apply this instruction to work app correctly",
+                                    textAlign: TextAlign.center,
+                                    fontSize: 12.sp,
+                                    color: AppColor.blackColor,
+                                  ),
+                                ),
+                              )
+                            ]));
                           },
                           title: "Notes For Some Devices (Xiaomi ,...) ",
                           iconLeading: Icons.chat_outlined,
