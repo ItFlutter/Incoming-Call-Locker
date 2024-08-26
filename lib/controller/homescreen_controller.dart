@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:incoming_call_locker/core/class/sqldb.dart';
 import 'package:incoming_call_locker/core/constant/approutes.dart';
 import 'package:incoming_call_locker/core/services/myservices.dart';
-import 'package:incoming_call_locker/view/widget/home/callingsetting.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../core/constant/appcolor.dart';
 import '../core/functions/requestreadcontactspermission.dart';
@@ -14,8 +13,6 @@ import '../core/functions/requestreadphonestateandcalllogpermissions.dart';
 import '../core/shared/customtext.dart';
 
 class HomeScreenController extends GetxController with WidgetsBindingObserver {
-  List<String> contactsSpecifiedNamesInDb = [];
-
   SqlDb sqlDb = Get.find();
   late String storedPassCode;
   late String storedPatternCode;
@@ -23,13 +20,7 @@ class HomeScreenController extends GetxController with WidgetsBindingObserver {
   bool isDisplayOverOtherAppsGranted = false;
   bool isReadPhoneStateAndCallLogPermissionsGranted = false;
   bool isReadContactsPermissionGranted = false;
-
   late bool activeSwitchLock;
-  String status = "";
-  static const channel =
-      MethodChannel("com.example.incoming_call_locker/incomingCall");
-  String callerNumber = "";
-  String callerName = "";
   // String selectedLockType = "Passcode";
   // String textSwitchLock = "Disable Lock";
   onClickSwitchLock(bool value) async {
@@ -268,27 +259,6 @@ class HomeScreenController extends GetxController with WidgetsBindingObserver {
     }
   }
 
-  getContactsFromDb() async {
-    List<Map> data = await sqlDb.readData('select * from incomingcalllocker');
-    print("============================================================");
-    print(
-        "=====================================data=======================$data");
-    if (data.isNotEmpty) {
-      contactsSpecifiedNamesInDb.addAll(data.map(
-        (e) => e['name'],
-      ));
-      print("============================================================");
-      print(
-          "=====================================contactsSpecifiedNamesInDb=======================$contactsSpecifiedNamesInDb");
-    }
-  }
-
-  getData() async {
-    if (selectedContactType == 2) {
-      await getContactsFromDb();
-    }
-  }
-
   requestNecessaryPermissionsHomeScreen() async {
     await requestAllPermissions();
     await requestDisplayOverOtherApps();
@@ -301,7 +271,6 @@ class HomeScreenController extends GetxController with WidgetsBindingObserver {
     print("============================================================");
     print(
         "=====================================selectedContactType=======================$selectedContactType");
-    getData();
     activeSwitchLock =
         myServices.sharedPreferences.getBool("lockactivited") ?? false;
     print("============================================================");
@@ -321,114 +290,6 @@ class HomeScreenController extends GetxController with WidgetsBindingObserver {
 
     WidgetsBinding.instance.addObserver(this);
     requestNecessaryPermissionsHomeScreen();
-
-    channel.setMethodCallHandler((call) async {
-      switch (call.method) {
-        case 'incomingCall':
-          status = "incomingCall";
-
-          callerNumber = call.arguments['number'];
-          callerName = call.arguments['name'];
-          print("============================================================");
-          print(
-              "=====================================callerNumber=======================$callerNumber");
-          print("============================================================");
-          print(
-              "=====================================callerName=======================$callerName");
-          break;
-        case 'callEnded':
-          status = "callEnded";
-
-          callerNumber = call.arguments['number'];
-          callerName = call.arguments['name'];
-          print("============================================================");
-          print(
-              "=====================================callerNumber=======================$callerNumber");
-
-          print("============================================================");
-          print(
-              "=====================================callerName=======================$callerName");
-          // if (activeSwitchLock == true) {
-          //   await FlutterOverlayWindow.closeOverlay();
-          // }
-          // Handle call ended
-          break;
-        default:
-          print("============================================================");
-          print(
-              "=====================================defaultcallerNumber=======================$callerNumber");
-          throw MissingPluginException('Not implemented: ${call.method}');
-      }
-      if (activeSwitchLock == true && status == "incomingCall") {
-        if (selectedContactType == 1 && callerName.isEmpty) {
-          await FlutterOverlayWindow.showOverlay(
-              alignment: OverlayAlignment.bottomCenter);
-          await FlutterOverlayWindow.shareData({
-            "storedPassCode": storedPassCode,
-            "storedPatternCode": storedPatternCode
-          });
-        }
-        if (selectedContactType == 2 &&
-            callerName.isNotEmpty &&
-            contactsSpecifiedNamesInDb.contains(callerName)) {
-          await FlutterOverlayWindow.showOverlay(
-              alignment: OverlayAlignment.bottomCenter);
-          await FlutterOverlayWindow.shareData({
-            "storedPassCode": storedPassCode,
-            "storedPatternCode": storedPatternCode
-          });
-        }
-        if (selectedContactType == 0) {
-          await FlutterOverlayWindow.showOverlay(
-              alignment: OverlayAlignment.bottomCenter);
-          await FlutterOverlayWindow.shareData({
-            "storedPassCode": storedPassCode,
-            "storedPatternCode": storedPatternCode
-          });
-        }
-      }
-      if (status == "callEnded" && activeSwitchLock == true) {
-        if (await FlutterOverlayWindow.isActive()) {
-          await FlutterOverlayWindow.shareData({
-            "storedPassCode": storedPassCode,
-            "storedPatternCode": storedPatternCode,
-            "resetstreamcontroller": true,
-          });
-          print(
-              "===========================ShareData from HomeScreen Active=================================");
-          await FlutterOverlayWindow.closeOverlay();
-          if (myServices.sharedPreferences.getString("startactivity") ==
-              "start") {
-            await SystemNavigator.pop();
-          }
-        } else {
-          await FlutterOverlayWindow.shareData({
-            "storedPassCode": storedPassCode,
-            "storedPatternCode": storedPatternCode,
-            "resetstreamcontroller": true,
-          });
-          print(
-              "===========================ShareData from HomeScreen NotActive=================================");
-          if (myServices.sharedPreferences.getString("startactivity") ==
-              "start") {
-            await SystemNavigator.pop();
-          }
-        }
-        print(
-            "===========================Call Ended HomeScreen=================================");
-
-        // if (myServices.sharedPreferences.getString("startactivity") ==
-        //     "start") {
-        //   print(
-        //       "===========================App Started From Android And Call Ended=================================");
-        //   await myServices.sharedPreferences.remove("startactivity");
-        //   print(
-        //       "=====================================startactivity=======================${myServices.sharedPreferences.getString("startactivity")}");
-        //   SystemNavigator.pop();
-        // }
-      }
-    });
-
     // TODO: implement onInit
     super.onInit();
   }

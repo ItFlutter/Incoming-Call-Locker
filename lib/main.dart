@@ -21,6 +21,7 @@ String status = "";
 const channel = MethodChannel("com.example.incoming_call_locker/incomingCall");
 
 getContactsFromDb() async {
+  contactsSpecifiedNamesInDb.clear();
   List<Map> data = await sqlDb.readData('select * from incomingcalllocker');
   print("============================================================");
   print(
@@ -45,8 +46,11 @@ Future<void> initializeApp() async {
 Future<void> setupMethodChannel() async {
   channel.setMethodCallHandler((call) async {
     switch (call.method) {
+      case 'incomingCall':
+        status = "incomingCall";
+        processCall(call.arguments['number'], call.arguments['name']);
+        break;
       case 'callEnded':
-        status = "callEnded";
         await handleCallEnded();
         break;
       default:
@@ -86,24 +90,28 @@ Future<void> handleCallEnded() async {
 }
 
 Future<void> processCall(String callerNumber, String callerName) async {
-  if (callerNumber.isNotEmpty) {
-    bool shouldShowOverlay =
-        selectedContactType == 0 || selectedContactType == 1;
+  selectedContactType =
+      myServices.sharedPreferences.getInt("callingsetting") ?? 0;
+  if (selectedContactType == 2) {
+    await getContactsFromDb();
+  }
+  bool shouldShowOverlay = selectedContactType == 0 || selectedContactType == 1;
+  if (selectedContactType == 2 &&
+      contactsSpecifiedNamesInDb.contains(callerName)) {
+    shouldShowOverlay = true;
+  }
 
-    if (selectedContactType == 2 &&
-        contactsSpecifiedNamesInDb.contains(callerName)) {
-      shouldShowOverlay = true;
-    }
-
-    if (shouldShowOverlay) {
-      await FlutterOverlayWindow.showOverlay(
-          alignment: OverlayAlignment.bottomCenter);
-      await FlutterOverlayWindow.shareData({
-        "storedPassCode": storedPassCode,
-        "storedPatternCode": storedPatternCode,
-      });
-    }
-
+  if (shouldShowOverlay) {
+    await FlutterOverlayWindow.showOverlay(
+        alignment: OverlayAlignment.bottomCenter);
+    await FlutterOverlayWindow.shareData({
+      "storedPassCode":
+          myServices.sharedPreferences.getString("storedpasscode") ?? "",
+      "storedPatternCode":
+          myServices.sharedPreferences.getString("storedpatterncode") ?? "",
+    });
+  }
+  if (status != "incomingCall") {
     MyServices myServices = Get.find();
     await myServices.sharedPreferences.remove('caller_number');
     await myServices.sharedPreferences.remove('caller_name');
@@ -119,30 +127,32 @@ void main() async {
       myServices.sharedPreferences.getString("startactivity") ?? "";
   print(
       "=====================================startactivity=======================$startactivity");
+
+  // activeSwitchLock =
+  //     myServices.sharedPreferences.getBool("lockactivited") ?? false;
+  // print("============================================================");
+  // print(
+  //     "=====================================activeSwitchLock=======================$activeSwitchLock");
+  selectedContactType =
+      myServices.sharedPreferences.getInt("callingsetting") ?? 0;
+  print("============================================================");
+  print(
+      "=====================================selectedContactType=======================$selectedContactType");
+  if (selectedContactType == 2) {
+    await getContactsFromDb();
+  }
+  storedPassCode =
+      myServices.sharedPreferences.getString("storedpasscode") ?? "";
+  print("============================================================");
+  print(
+      "=====================================storedPassCode=======================$storedPassCode");
+  storedPatternCode =
+      myServices.sharedPreferences.getString("storedpatterncode") ?? "";
+  print("============================================================");
+  print(
+      "=====================================storedPatternCode=======================$storedPatternCode");
+  await setupMethodChannel();
   if (startactivity == "start") {
-    // activeSwitchLock =
-    //     myServices.sharedPreferences.getBool("lockactivited") ?? false;
-    // print("============================================================");
-    // print(
-    //     "=====================================activeSwitchLock=======================$activeSwitchLock");
-    selectedContactType =
-        myServices.sharedPreferences.getInt("callingsetting") ?? 0;
-    print("============================================================");
-    print(
-        "=====================================selectedContactType=======================$selectedContactType");
-    if (selectedContactType == 2) {
-      await getContactsFromDb();
-    }
-    storedPassCode =
-        myServices.sharedPreferences.getString("storedpasscode") ?? "";
-    print("============================================================");
-    print(
-        "=====================================storedPassCode=======================$storedPassCode");
-    storedPatternCode =
-        myServices.sharedPreferences.getString("storedpatterncode") ?? "";
-    print("============================================================");
-    print(
-        "=====================================storedPatternCode=======================$storedPatternCode");
     String callerNumber =
         myServices.sharedPreferences.getString('caller_number') ?? '';
     String callerName =
@@ -153,10 +163,11 @@ void main() async {
     print("============================================================");
     print(
         "=====================================callerName=======================$callerName");
-    await setupMethodChannel();
     await processCall(callerNumber, callerName);
   }
-  runApp(const MyApp());
+  if (startactivity != "start") {
+    runApp(const MyApp());
+  }
 }
 
 SharedPreferences? sharedPref;

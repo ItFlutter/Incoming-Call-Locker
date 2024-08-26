@@ -1,6 +1,5 @@
 package com.example.incoming_call_locker
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.ContentResolver
 import android.content.Context
@@ -16,7 +15,7 @@ import android.content.Context.TELEPHONY_SERVICE
 import android.os.PowerManager
 import androidx.core.app.ActivityCompat.finishAfterTransition
 import kotlin.system.exitProcess
-
+import android.app.Activity
 @Suppress("DEPRECATION")
 class IncomingCallReceiver: BroadcastReceiver() {
     private var methodChannel: MethodChannel? = null
@@ -24,14 +23,16 @@ class IncomingCallReceiver: BroadcastReceiver() {
         Log.d("IncomingCallReceiver", "setMethodChannel")
         methodChannel = channel
     }
+    private lateinit var sharedPreferences: SharedPreferences
+    private var lockactivited: Boolean = false
+    private var callingsetting: Int = 0
     override fun onReceive(context: Context, intent: Intent) {
-        val sharedPreferences: SharedPreferences = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
+         sharedPreferences = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
         Log.d("IncomingCallReceiver", "onReceive called")
         if (intent.action == TelephonyManager.ACTION_PHONE_STATE_CHANGED) {
             val state = intent.getStringExtra(TelephonyManager.EXTRA_STATE)
 //            val incomingNumber = intent.extras?.getString("incoming_number")
             val incomingNumber = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER )
-//            if (state == TelephonyManager.EXTRA_STATE_RINGING ) {
 //                // Notify Flutter app about the incoming call
 //                methodChannel?.invokeMethod("incomingCall", incomingNumber)
 //            }
@@ -50,12 +51,27 @@ class IncomingCallReceiver: BroadcastReceiver() {
 //                     Launch the Flutter activity
                         if (MainActivity().isFlutterAppRunning()) {
                             Log.d("IncomingCallReceiver", "The Flutter app is currently running")
-                            methodChannel?.invokeMethod("incomingCall", mapOf("number" to incomingNumber, "name" to callerName))
+                            lockactivited= sharedPreferences.getBoolean("flutter.lockactivited", false)
+                            callingsetting= sharedPreferences.getLong("flutter.callingsetting", 0).toInt()
+
+                            if(lockactivited==true){
+                                if(callingsetting==1 && callerName==""){
+                                    Log.d("IncomingCallReceiver", "Unknown Contacts")
+                                    methodChannel?.invokeMethod("incomingCall", mapOf("number" to incomingNumber, "name" to callerName))
+                                }
+                                if(callingsetting==0) {
+                                    Log.d("IncomingCallReceiver", "All Contacts")
+                                    methodChannel?.invokeMethod("incomingCall", mapOf("number" to incomingNumber, "name" to callerName))
+                                }
+                                if(callingsetting==2&& callerName!="") {
+                                    Log.d("IncomingCallReceiver", "Specific Contacts")
+                                    methodChannel?.invokeMethod("incomingCall", mapOf("number" to incomingNumber, "name" to callerName))
+                                }
+                            }
                         } else {
                             Log.d("IncomingCallReceiver", "The Flutter app is not running")
-
-                            val lockactivited= sharedPreferences.getBoolean("flutter.lockactivited", false)
-                            val callingsetting= sharedPreferences.getLong("flutter.callingsetting", 0).toInt()
+                             lockactivited= sharedPreferences.getBoolean("flutter.lockactivited", false)
+                             callingsetting= sharedPreferences.getLong("flutter.callingsetting", 0).toInt()
                             if(lockactivited==true){
                                 if(callingsetting==1 && callerName==""){
                                     Log.d("IncomingCallReceiver", "Unknown Contacts")
@@ -118,7 +134,7 @@ class IncomingCallReceiver: BroadcastReceiver() {
                     TelephonyManager.EXTRA_STATE_IDLE -> {
                         // Notify Flutter app that the call ended
                         Log.d("IncomingCallReceiver", "Call ended from $incomingNumber")
-                        methodChannel?.invokeMethod("callEnded", mapOf("number" to incomingNumber, "name" to callerName))
+  methodChannel?.invokeMethod("callEnded", mapOf("number" to incomingNumber, "name" to callerName))
                         val startActivity= sharedPreferences.getString("flutter.startactivity", "");
                         if(startActivity=="start"){
                             Log.d("IncomingCallReceiver", "startActivity==start")
@@ -138,10 +154,11 @@ class IncomingCallReceiver: BroadcastReceiver() {
 //                                Log.d("IncomingCallReceiver", "App is closing.")
 //                            }
 //                        exitProcess(0)
-                        }else{
-                            methodChannel?.invokeMethod("callEnded", mapOf("number" to incomingNumber, "name" to callerName))
-
                         }
+//                        else{
+//                            methodChannel?.invokeMethod("callEnded", mapOf("number" to incomingNumber, "name" to callerName))
+
+//                        }
 
     //                        val sharedPreferences: SharedPreferences = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
     //                        val startActivity= sharedPreferences.getString("flutter.startactivity", "");
@@ -155,8 +172,8 @@ class IncomingCallReceiver: BroadcastReceiver() {
     //                        }
                     }
                 }}
-        }
-    }
+
+    }}
     @SuppressLint("Range")
     private fun getContactName(context: Context, phoneNumber: String): String? {
         val contentResolver: ContentResolver = context.contentResolver
