@@ -7,6 +7,7 @@ import '../core/functions/requestreadcontactspermission.dart';
 import '../core/services/myservices.dart';
 
 class SpecificContactsController extends GetxController {
+
   MyServices myServices = Get.find();
 
   late int selectedContactType;

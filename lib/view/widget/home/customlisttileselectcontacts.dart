@@ -27,15 +27,15 @@ class CustomListTileSelectContacts extends StatelessWidget {
     return ListTile(
       leading: Icon(
         icon,
-        size: 30,
+        size: 20.h,
       ),
       minLeadingWidth: 10.w,
-      title: CustomText(text: title, fontWeight: FontWeight.w500),
+      title: CustomText(text: title, fontSize: 14.sp, fontWeight: FontWeight.w500),
       trailing: SwitchButtonEnableAndDisable(
         value: value,
         onChanged: onPressedSwitch,
       ),
-      subtitle: CustomText(text: subtitle),
+      subtitle: CustomText(text: subtitle, fontSize: 12.sp,),
     );
   }
 }

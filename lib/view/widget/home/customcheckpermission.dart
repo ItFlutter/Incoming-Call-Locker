@@ -23,9 +23,11 @@ class CustomCheckPermission extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-            color: AppColor.primaryColor,
+            border:
+            Border.all(color: Colors.grey, width: 0.4),
+            color: AppColor.whiteColor,
             borderRadius: BorderRadius.circular(10)),
-        padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 10.w),
+        padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
         margin: EdgeInsets.symmetric(horizontal: 5.w),
         child: Row(
           children: [
@@ -36,16 +38,14 @@ class CustomCheckPermission extends StatelessWidget {
                   CustomText(
                     text: title,
                     color: AppColor.blackColor,
-                    fontSize: 14.5.sp,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w500,
                   ),
-                  SizedBox(
-                    height: 5.h,
-                  ),
+
                   CustomText(
                     text: isGranted ? "Permission Granted" : description,
                     color: AppColor.blackColor,
-                    fontSize: 13.7.sp,
+                    fontSize: 12.sp,
                     fontWeight: FontWeight.w400,
                   ),
                 ],
@@ -54,7 +54,7 @@ class CustomCheckPermission extends StatelessWidget {
             isGranted
                 ? Icon(
                     Icons.done,
-                    size: 28.h,
+                    size: 25.h,
                   )
                 : Container()
           ],

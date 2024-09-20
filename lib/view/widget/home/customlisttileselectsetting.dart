@@ -9,6 +9,7 @@ class CustomListTileSelectSetting extends StatelessWidget {
   final IconData? iconTrealing;
   final String title;
   final void Function()? onTap;
+
   const CustomListTileSelectSetting(
       {Key? key,
       this.iconLeading,
@@ -25,7 +26,7 @@ class CustomListTileSelectSetting extends StatelessWidget {
       title: CustomText(
         text: title,
         color: AppColor.greyColor,
-        fontSize: 15.sp,
+        fontSize: 14.sp,
         fontWeight: FontWeight.w400,
       ),
       trailing: Icon(iconTrealing),

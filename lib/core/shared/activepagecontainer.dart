@@ -4,7 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../constant/appcolor.dart';
 
 class ActivePageContainer extends StatelessWidget {
+
   final bool isActive;
+
   const ActivePageContainer({Key? key, required this.isActive})
       : super(key: key);
 

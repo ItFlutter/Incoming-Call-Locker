@@ -1,8 +1,9 @@
-import 'package:sqflite/sqflite.dart';
 import "package:path/path.dart";
+import 'package:sqflite/sqflite.dart';
 
 class SqlDb {
   static Database? _db;
+
   Future<Database?> get db async {
     if (_db == null) {
       _db = await initialDb();
@@ -37,12 +38,6 @@ CREATE TABLE 'incomingcalllocker'(
   'isSelected'      INTEGER NOT NULL
 )
 ''');
-//     batch.execute('''
-// CREATE TABLE 'student' (
-//   id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-//   name TEXT NOT NULL
-// )
-// ''');
     batch.commit();
     print("onCreate ===================================================");
   }
