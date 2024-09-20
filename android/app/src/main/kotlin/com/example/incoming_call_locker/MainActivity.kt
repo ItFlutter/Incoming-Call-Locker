@@ -1,4 +1,5 @@
 package com.example.incoming_call_locker
+
 import android.content.Context
 import android.content.Intent
 import androidx.annotation.NonNull
@@ -18,8 +19,9 @@ import android.os.PowerManager
 import android.provider.Settings
 import android.view.WindowManager
 import android.annotation.SuppressLint
+
 @Suppress("DEPRECATION")
-class MainActivity: FlutterActivity() {
+class MainActivity : FlutterActivity() {
     //    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
 //        super.configureFlutterEngine(flutterEngine)
 //    }
@@ -28,18 +30,20 @@ class MainActivity: FlutterActivity() {
         var isAppRunning: Boolean = false
             private set
     }
+
     private lateinit var incomingCallReceiver: IncomingCallReceiver
     private val channel = "com.example.incoming_call_locker/incomingCall"
-    override fun configureFlutterEngine(@NonNull flutterEngine:FlutterEngine){
+    override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         Log.d("MainActivity", "configureFlutterEngine")
         GeneratedPluginRegistrant.registerWith(flutterEngine);
-        val methodChannel =   MethodChannel(flutterEngine.dartExecutor.binaryMessenger,channel)
+        val methodChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, channel)
         incomingCallReceiver = IncomingCallReceiver().apply {
             setMethodChannel(methodChannel)
         }
         val filter = IntentFilter(TelephonyManager.ACTION_PHONE_STATE_CHANGED)
         registerReceiver(incomingCallReceiver, filter)
     }
+
     //                .setMethodCallHandler { call, result ->
 //            if(call.method=="playMusic"){
 //                val player=MediaPlayer.create(this,Settings.System.DEFAULT_RINGTONE_URI) as MediaPlayer;
@@ -79,13 +83,14 @@ class MainActivity: FlutterActivity() {
         Log.d("caller_name", callerName)
         if (callerNumber.isNotEmpty()) {
             // Store the data in SharedPreferences
-            val sharedPreferences = getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
+            val sharedPreferences =
+                getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
             val editor = sharedPreferences.edit().apply {
                 putString("flutter.caller_number", callerNumber)
                 putString("flutter.caller_name", callerName)
                 apply()
             }
-                            moveTaskToBack(true)
+            moveTaskToBack(true)
 //            val startActivity= sharedPreferences.getString("flutter.startactivity", "");
 //            if(startActivity=="start"){
 //                Log.d("MainActivity", "startActivity==start")
@@ -113,11 +118,13 @@ class MainActivity: FlutterActivity() {
             startService(serviceIntent)
         }
     }
+
     override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(incomingCallReceiver)
         isAppRunning = false
 //        flutterEngine.destroy()
     }
+
     fun isFlutterAppRunning(): Boolean = isAppRunning
 }

@@ -205,6 +205,7 @@ class HomeScreenController extends GetxController with WidgetsBindingObserver {
 
     update();
   }
+
   // checkDisplayOverOtherAppsGranted() async {
   //   isDisplayOverOtherAppsGranted == false
   //       ? await FlutterOverlayWindow.requestPermission()
@@ -232,12 +233,12 @@ class HomeScreenController extends GetxController with WidgetsBindingObserver {
   }
 
   late int selectedContactType;
+
   onSelectContactsType(int type) {
     print("============================================================");
     print(
         "=====================================onSelectContactsType=======================");
     myServices.sharedPreferences.remove("callingsetting");
-
     selectedContactType = type;
     update();
   }
@@ -290,15 +291,13 @@ class HomeScreenController extends GetxController with WidgetsBindingObserver {
 
     WidgetsBinding.instance.addObserver(this);
     requestNecessaryPermissionsHomeScreen();
-    // TODO: implement onInit
+
     super.onInit();
   }
 
   @override
   void onClose() {
     WidgetsBinding.instance.removeObserver(this);
-
-    // TODO: implement onClose
     super.onClose();
   }
 

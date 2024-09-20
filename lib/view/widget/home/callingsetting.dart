@@ -14,10 +14,12 @@ class CallingSetting extends StatelessWidget {
     return GetBuilder<HomeScreenController>(
       builder: (controller) {
         return Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CustomListTileSelectContacts(
               title: "All Contacts",
-              subtitle: controller.selectedContactType == 0 ? "Enabled" : "",
+              subtitle: controller.selectedContactType == 0 ? "Enabled" : "Not Enable",
               icon: Icons.contact_phone,
               value: controller.selectedContactType == 0 ? true : false,
               onPressedSwitch: (value) {
@@ -29,11 +31,11 @@ class CallingSetting extends StatelessWidget {
             ),
             Divider(
               height: 0.1.h,
-              thickness: 1.5.h,
+              thickness: 0.5.h,
             ),
             CustomListTileSelectContacts(
               title: "Unknown Contacts",
-              subtitle: controller.selectedContactType == 1 ? "Enabled" : "",
+              subtitle: controller.selectedContactType == 1 ? "Enabled" : "Not Enable",
               value: controller.selectedContactType == 1 ? true : false,
               icon: Icons.groups,
               onPressedSwitch: (value) {
@@ -45,7 +47,7 @@ class CallingSetting extends StatelessWidget {
             ),
             Divider(
               height: 0.1.h,
-              thickness: 1.5.h,
+              thickness: 0.5.h,
             ),
             InkWell(
               onTap: () async {
@@ -55,8 +57,8 @@ class CallingSetting extends StatelessWidget {
               child: CustomListTileSelectContacts(
                 title: "Specific Contacts",
                 subtitle: controller.selectedContactType == 2
-                    ? "click to select contacts"
-                    : "",
+                    ? "Select Contacts"
+                    : "Not Selected",
                 icon: Icons.manage_accounts,
                 value: controller.selectedContactType == 2 ? true : false,
                 onPressedSwitch: (value) async {

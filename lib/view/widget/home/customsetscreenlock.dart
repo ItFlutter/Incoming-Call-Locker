@@ -7,9 +7,11 @@ import '../../../core/shared/customtext.dart';
 class CustomSetScreenLock extends StatelessWidget {
   final void Function()? onTap;
   final String text;
+  final String path;
   final bool isEnrolled;
+
   const CustomSetScreenLock(
-      {Key? key, this.onTap, required this.text, required this.isEnrolled})
+      {Key? key, this.onTap, required this.text, required this.path, required this.isEnrolled})
       : super(key: key);
 
   @override
@@ -17,40 +19,35 @@ class CustomSetScreenLock extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        height: 115.h,
-        padding: EdgeInsets.symmetric(vertical: 13.h, horizontal: 20.w),
-        margin: EdgeInsets.only(right: 10.w, left: 5.w),
+        height: 120.h,
+        padding: EdgeInsets.symmetric(vertical: 15.h, horizontal: 20.w),
+        margin: EdgeInsets.only(right: 8.w, left: 5.w),
         decoration: BoxDecoration(
-            color: AppColor.primaryColor,
+            border:
+            Border.all(color: Colors.grey, width: 0.4),
+            color: AppColor.whiteColor,
             borderRadius: BorderRadius.circular(10)),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CircleAvatar(
-              backgroundColor: AppColor.blueColor,
-              maxRadius: 15,
-              child: Icon(
-                Icons.https,
-                color: AppColor.whiteColor,
-                size: 20.w,
-              ),
-            ),
+            Image.asset(path, height: 30, width: 30,),
+            // SvgPicture.asset(path, allowDrawingOutsideViewBox: true,),
             SizedBox(
-              width: 15.h,
+              width: 10.h,
             ),
             CustomText(
               text: text,
               color: AppColor.blackColor,
               // fontSize: 16.sp,
-              fontSize: 13.sp,
-              fontWeight: FontWeight.w600,
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w500,
             ),
             isEnrolled
                 ? CustomText(
                     text: "Enrolled",
                     color: AppColor.blackColor,
-                    fontSize: 13.7.sp,
+                    fontSize: 12.sp,
                     fontWeight: FontWeight.w300,
                   )
                 : Container(),

@@ -6,6 +6,5 @@ class InitialBindings implements Bindings {
   @override
   void dependencies() {
     Get.put(SqlDb());
-    // TODO: implement dependencies
   }
 }
