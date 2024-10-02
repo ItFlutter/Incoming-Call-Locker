@@ -46,7 +46,7 @@ class CustomCheckPermission extends StatelessWidget {
                     text: isGranted ? "Permission Granted" : description,
                     color: AppColor.blackColor,
                     fontSize: 12.sp,
-                    fontWeight: FontWeight.w400,
+                    fontWeight: FontWeight.w300,
                   ),
                 ],
               ),

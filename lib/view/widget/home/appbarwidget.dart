@@ -31,12 +31,12 @@ class AppBarWidget extends StatelessWidget {
                       height: 4,
                     ),
                     Text(
-                      "Incoming call locker help you to protect your call from unauthorized person",
+                      "Incoming call locker help you to protect and secure your call from unauthorized person",
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                           color: Colors.white,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w300,
                           fontSize: 14),
                     ),
                   ],
