@@ -4,8 +4,6 @@ import 'package:get/get.dart';
 import 'package:incoming_call_locker/core/constant/appcolor.dart';
 import 'package:incoming_call_locker/core/shared/customtext.dart';
 import 'package:incoming_call_locker/core/shared/activepagecontainer.dart';
-import 'package:incoming_call_locker/view/widget/passwordlock/passcodewidget.dart';
-import '../../controller/confirmpasswordlock_controller.dart';
 import '../../controller/confirmpatternlock_controller.dart';
 import '../widget/patternlock/patternlockwidget.dart';
 

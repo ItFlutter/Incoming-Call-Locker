@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:incoming_call_locker/core/constant/approutes.dart';
-import 'package:incoming_call_locker/test.dart';
 import 'package:incoming_call_locker/view/screen/confirmpasswordlockscreen.dart';
 import 'package:incoming_call_locker/view/screen/confirmpatternlockscreen.dart';
 import 'package:incoming_call_locker/view/screen/homescreen.dart';
@@ -12,7 +11,6 @@ import 'package:incoming_call_locker/view/screen/specificcontacts.dart';
 
 List<GetPage<dynamic>>? routes = [
   GetPage(name: AppRoutes.homeScreen, page: () => const HomeScreen()),
-  GetPage(name: AppRoutes.testScreen, page: () => const Test()),
   GetPage(
       name: AppRoutes.passwordlockScreen,
       page: () => const PasswordLockScreen()),

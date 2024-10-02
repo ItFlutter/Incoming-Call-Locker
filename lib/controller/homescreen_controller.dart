@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_overlay_window/flutter_overlay_window.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -7,6 +6,7 @@ import 'package:incoming_call_locker/core/class/sqldb.dart';
 import 'package:incoming_call_locker/core/constant/approutes.dart';
 import 'package:incoming_call_locker/core/services/myservices.dart';
 import 'package:permission_handler/permission_handler.dart';
+
 import '../core/constant/appcolor.dart';
 import '../core/functions/requestreadcontactspermission.dart';
 import '../core/functions/requestreadphonestateandcalllogpermissions.dart';
@@ -21,6 +21,7 @@ class HomeScreenController extends GetxController with WidgetsBindingObserver {
   bool isReadPhoneStateAndCallLogPermissionsGranted = false;
   bool isReadContactsPermissionGranted = false;
   late bool activeSwitchLock;
+
   // String selectedLockType = "Passcode";
   // String textSwitchLock = "Disable Lock";
   onClickSwitchLock(bool value) async {
@@ -114,9 +115,15 @@ class HomeScreenController extends GetxController with WidgetsBindingObserver {
     } else {
       Get.defaultDialog(
         title: "Success",
-        middleText: "The permissions are granted.",
-        titleStyle: const TextStyle(
-            fontWeight: FontWeight.bold, color: AppColor.greenColor),
+          middleText: "Read phone state permissions is granted.",
+          titleStyle: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: AppColor.greenColor,
+              fontSize: 18.sp),
+          middleTextStyle: TextStyle(
+            fontSize: 16.sp,
+          ),
+          radius: 10,
       );
     }
 
@@ -150,9 +157,15 @@ class HomeScreenController extends GetxController with WidgetsBindingObserver {
         ? await FlutterOverlayWindow.requestPermission()
         : Get.defaultDialog(
             title: "Success",
-            middleText: "The permissions is granted.",
-            titleStyle: const TextStyle(
-                fontWeight: FontWeight.bold, color: AppColor.greenColor),
+            middleText: "Draw over app permissions is granted.",
+            titleStyle: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: AppColor.greenColor,
+                fontSize: 18.sp),
+            middleTextStyle: TextStyle(
+              fontSize: 16.sp,
+            ),
+            radius: 10,
           );
 
     update();
@@ -160,33 +173,60 @@ class HomeScreenController extends GetxController with WidgetsBindingObserver {
 
   requestDisplayOverOtherApps() async {
     isDisplayOverOtherAppsGranted =
-        await await FlutterOverlayWindow.isPermissionGranted();
+        await FlutterOverlayWindow.isPermissionGranted();
     print("============================================================");
     print(
         "=====================================isDisplayOverOtherAppsGranted=======================$isDisplayOverOtherAppsGranted");
     if (isDisplayOverOtherAppsGranted == false) {
       Get.defaultDialog(
-        contentPadding: EdgeInsets.only(left: 5.w, right: 5.w),
+        barrierDismissible: false,
+        contentPadding: EdgeInsets.only(left: 10.w, right: 10.w, bottom: 5.w),
         title: "Warning",
         middleText:
             "The Draw Over Other App is important for this app. Please grant the permission.",
         middleTextStyle: TextStyle(
-          fontSize: 18.sp,
+          fontSize: 16.sp,
         ),
-        onCancel: () {
-          Get.back();
-        },
-        textCancel: "Cancel",
-        onConfirm: () async {
-          Get.back();
-          await FlutterOverlayWindow.requestPermission();
-        },
-        textConfirm: "Grant",
-        confirmTextColor: AppColor.greenColor,
-        cancelTextColor: AppColor.redColor,
-        buttonColor: AppColor.whiteColor,
-        titleStyle: const TextStyle(
-            fontWeight: FontWeight.bold, color: AppColor.redColor),
+        // textCancel: "Cancel",
+        // cancelTextColor: AppColor.redColor,
+        // onCancel: () {
+        //   Get.back();
+        // },
+
+        // textConfirm: "Grant",
+        // confirmTextColor: AppColor.greenColor,
+        // onConfirm: () async {
+        //   Get.back();
+        //   await FlutterOverlayWindow.requestPermission();
+        // },
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              TextButton(
+                  onPressed: () {
+                    Get.back();
+                  },
+                  child: Text("CANCEL")),
+              SizedBox(
+                width: 5.w,
+              ),
+              TextButton(
+                  onPressed: () async {
+                    Get.back();
+                    await FlutterOverlayWindow.requestPermission();
+                  },
+                  child: Text("GRANT")),
+            ],
+          )
+        ],
+        radius: 10,
+
+        // buttonColor: AppColor.whiteColor,
+        titleStyle: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: AppColor.redColor,
+            fontSize: 18.sp),
       );
     }
     update();
