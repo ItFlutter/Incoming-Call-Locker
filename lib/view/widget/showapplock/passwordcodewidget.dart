@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:passcode_screen/keyboard.dart';
 import 'package:passcode_screen/passcode_screen.dart';
 
 import '../../../core/constant/appcolor.dart';
@@ -20,28 +22,13 @@ class PasswordCodeWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PasscodeScreen(
-      // backgroundColor: AppColor.whiteColor,
       title: CustomText(
           text: title,
           fontWeight: FontWeight.w500,
           color: AppColor.whiteColor,
           fontSize: 18.sp),
-      // isValidCallback: isValidCallback,
-      // circleUIConfig: const CircleUIConfig(
-      //     borderWidth: 0.0,
-      //     fillColor: AppColor.blueColor,
-      //     circleSize: 13,
-      //     borderColor: AppColor.greyColor),
-      // keyboardUIConfig: KeyboardUIConfig(
-      //     keyboardSize:
-      //         Size(Get.width - 200, Get.height - 200),
-      //     digitInnerMargin:
-      //         EdgeInsets.only(right: 65 * Get.width),
-      //     digitTextStyle: TextStyle(
-      //       color: AppColor.blackColor,
-      //       fontSize: 17,
-      //     ),
-      //     primaryColor: AppColor.transparentColor),
+      keyboardUIConfig:
+          KeyboardUIConfig(keyboardSize: Size(Get.width + 20, Get.height + 20)),
       passwordDigits: 4,
       passwordEnteredCallback: passwordEnteredCallback,
       cancelButton: Padding(
@@ -59,6 +46,20 @@ class PasswordCodeWidget extends StatelessWidget {
             const Text('Delete', style: TextStyle(color: AppColor.blueColor)),
       ),
       shouldTriggerVerification: shouldTriggerVerification,
+      // backgroundColor: AppColor.whiteColor,
+      // isValidCallback: isValidCallback,
+      // circleUIConfig: const CircleUIConfig(
+      //     borderWidth: 0.0,
+      //     fillColor: AppColor.blueColor,
+      //     circleSize: 13,
+      //     borderColor: AppColor.greyColor),
+      //     digitInnerMargin:
+      //         EdgeInsets.only(right: 65 * Get.width),
+      //     digitTextStyle: TextStyle(
+      //       color: AppColor.blackColor,
+      //       fontSize: 17,
+      //     ),
+      //     primaryColor: AppColor.transparentColor),
     );
   }
 }

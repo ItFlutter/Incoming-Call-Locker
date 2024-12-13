@@ -35,9 +35,6 @@ class ShowAppLock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("============================================================");
-    print(
-        "===================================height=========================${Get.height}");
     Get.put(ShowAppLockController());
 
     return GetMaterialApp(
