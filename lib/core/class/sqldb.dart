@@ -25,7 +25,7 @@ class SqlDb {
     // if (oldversion < newversion) {
     //   await db.execute("ALTER TABLE 'notes' ADD COLUMN 'color' TEXT ");
     // }
-    print("onUpgrade ===================================================");
+    print("========== onUpgrade ==========");
   }
 
   _onCreate(Database db, int version) async {
@@ -39,7 +39,7 @@ CREATE TABLE 'incomingcalllocker'(
 )
 ''');
     batch.commit();
-    print("onCreate ===================================================");
+    print("========== onCreate ==========");
   }
 
   readData(String sql) async {
@@ -78,8 +78,7 @@ CREATE TABLE 'incomingcalllocker'(
 
     await deleteDatabase(path);
     _db = null;
-    print(
-        "delete Database ===================================================");
+    print("========== delete Database ==========");
   }
 
   read(String table) async {

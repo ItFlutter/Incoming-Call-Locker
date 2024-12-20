@@ -1,13 +1,13 @@
 import 'package:get/get.dart';
-import 'package:incoming_call_locker/core/constant/approutes.dart';
-import 'package:incoming_call_locker/view/screen/confirmpasswordlockscreen.dart';
-import 'package:incoming_call_locker/view/screen/confirmpatternlockscreen.dart';
-import 'package:incoming_call_locker/view/screen/homescreen.dart';
-import 'package:incoming_call_locker/view/screen/passwordlockscreen.dart';
-import 'package:incoming_call_locker/view/screen/patternlockscreen.dart';
-import 'package:incoming_call_locker/view/screen/repasswordlockscreen.dart';
-import 'package:incoming_call_locker/view/screen/repatternlockscreen.dart';
-import 'package:incoming_call_locker/view/screen/specificcontacts.dart';
+import 'package:incoming_call_locker/core/constant/app_routes.dart';
+import 'package:incoming_call_locker/view/screen/confirm_password_lock_screen.dart';
+import 'package:incoming_call_locker/view/screen/confirm_pattern_lock_screen.dart';
+import 'package:incoming_call_locker/view/screen/home_screen.dart';
+import 'package:incoming_call_locker/view/screen/password_lock_screen.dart';
+import 'package:incoming_call_locker/view/screen/pattern_lock_screen.dart';
+import 'package:incoming_call_locker/view/screen/repassword_lock_screen.dart';
+import 'package:incoming_call_locker/view/screen/repattern_lock_screen.dart';
+import 'package:incoming_call_locker/view/screen/specific_contacts.dart';
 
 List<GetPage<dynamic>>? routes = [
   GetPage(name: AppRoutes.homeScreen, page: () => const HomeScreen()),

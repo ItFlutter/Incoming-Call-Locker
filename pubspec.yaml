@@ -35,10 +35,10 @@ dependencies:
   flutter_screenutil: ^5.9.3
   permission_handler: ^11.3.1
   passcode_screen: ^2.0.1
-  shared_preferences: ^2.3.2
+  shared_preferences: ^2.3.4
   pattern_lock: ^2.0.0
   contacts_service: ^0.6.3
-  sqflite: ^2.3.3+1
+  sqflite: ^2.4.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -55,7 +55,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
-  flutter_launcher_icons: ^0.14.1
+  flutter_launcher_icons: ^0.14.2
 
 flutter_icons:
   android: "launcher_icon"
