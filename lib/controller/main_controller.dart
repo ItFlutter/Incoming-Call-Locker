@@ -56,8 +56,7 @@ class MainController extends GetxController {
     }
 
     if (shouldShowOverlay) {
-      await FlutterOverlayWindow.showOverlay(
-          alignment: OverlayAlignment.bottomCenter);
+      await FlutterOverlayWindow.showOverlay();
       await FlutterOverlayWindow.shareData({
         "storedPassCode":
             myServices.sharedPreferences.getString("storedpasscode") ?? "",

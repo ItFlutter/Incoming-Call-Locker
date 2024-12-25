@@ -27,12 +27,14 @@ class PasswordCodeWidget extends StatelessWidget {
     }
 
     return PasscodeScreen(
+      keyboardUIConfig: KeyboardUIConfig(
+          keyboardSize: Size((ScreenUtil.defaultSize.height / 2) * 3 / 4,
+              ScreenUtil.defaultSize.height / 2)),
       title: CustomText(
           text: title,
           fontWeight: FontWeight.w500,
           color: AppColor.whiteColor,
           fontSize: 18.sp),
-
       passwordDigits: 4,
       passwordEnteredCallback: passwordEnteredCallback,
       cancelButton: const Text(
