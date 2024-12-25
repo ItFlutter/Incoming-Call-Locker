@@ -27,33 +27,22 @@ class PasswordCodeWidget extends StatelessWidget {
     }
 
     return PasscodeScreen(
-      title: Padding(
-        padding: EdgeInsets.only(top: 70.0.h),
-        child: CustomText(
-            text: title,
-            fontWeight: FontWeight.w500,
-            color: AppColor.whiteColor,
-            fontSize: 18.sp),
-      ),
-      keyboardUIConfig: KeyboardUIConfig(
-          keyboardSize: Size(
-              ScreenUtil.defaultSize.width, ScreenUtil.defaultSize.height)),
+      title: CustomText(
+          text: title,
+          fontWeight: FontWeight.w500,
+          color: AppColor.whiteColor,
+          fontSize: 18.sp),
+
       passwordDigits: 4,
       passwordEnteredCallback: passwordEnteredCallback,
-      cancelButton: Padding(
-        padding: EdgeInsets.only(bottom: 80.h),
-        child: const Text(
-          '',
-          style: TextStyle(
-            color: AppColor.blueColor,
-          ),
+      cancelButton: const Text(
+        '',
+        style: TextStyle(
+          color: AppColor.blueColor,
         ),
       ),
-      deleteButton: Padding(
-        padding: EdgeInsets.only(bottom: 80.h),
-        child:
-            const Text('Delete', style: TextStyle(color: AppColor.blueColor)),
-      ),
+      deleteButton:
+          const Text('Delete', style: TextStyle(color: AppColor.blueColor)),
       shouldTriggerVerification: shouldTriggerVerification,
       // backgroundColor: AppColor.whiteColor,
       // isValidCallback: isValidCallback,

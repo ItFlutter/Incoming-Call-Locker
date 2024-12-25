@@ -10,8 +10,8 @@ class MyServices extends GetxService {
   late SqlDb sqlDb;
   Future<MyServices> init() async {
     WidgetsFlutterBinding.ensureInitialized();
-    await ScreenUtil.ensureScreenSize();
     await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    await ScreenUtil.ensureScreenSize();
     sqlDb = Get.put(SqlDb());
     sharedPreferences = await SharedPreferences.getInstance();
     return this;
