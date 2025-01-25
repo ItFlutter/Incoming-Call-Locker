@@ -10,7 +10,7 @@ import 'routes.dart';
 
 void main() async {
   print("========== main ==========");
-  MyServices? myServices = await initialServices();
+  await initialServices();
   MainController mainController = Get.put(MainController());
   if (mainController.startActivity == "start") {
     sharedPref = await SharedPreferences.getInstance();

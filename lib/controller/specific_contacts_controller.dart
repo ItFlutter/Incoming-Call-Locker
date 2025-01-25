@@ -174,7 +174,6 @@ class SpecificContactsController extends GetxController {
               phone: e.phones![0].value ?? "UnKnown",
               isSelected: false);
         }
-        ;
       }));
 
       print("========== contactsModel ========== $contactsModel");

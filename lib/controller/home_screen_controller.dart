@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_overlay_window/flutter_overlay_window.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:incoming_call_locker/core/class/sqldb.dart';
-import 'package:incoming_call_locker/core/constant/app_image_asset.dart';
 import 'package:incoming_call_locker/core/constant/app_routes.dart';
 import 'package:incoming_call_locker/core/services/my_services.dart';
-import 'package:incoming_call_locker/core/shared/custom_text.dart';
 import 'package:incoming_call_locker/data/model/other_settings_model.dart';
 import 'package:incoming_call_locker/view/widget/dialogs/dialogs.dart';
 import 'package:incoming_call_locker/view/widget/home/custom_show_instruction.dart';

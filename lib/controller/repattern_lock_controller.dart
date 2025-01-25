@@ -1,10 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:incoming_call_locker/core/constant/app_routes.dart';
 import 'package:incoming_call_locker/view/widget/dialogs/dialogs.dart';
-import '../core/constant/app_color.dart';
-import '../core/shared/custom_text.dart';
 
 class RePatternLockScreenController extends GetxController {
   int numberOfPage = 3;

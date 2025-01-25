@@ -2,17 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:incoming_call_locker/core/constant/app_color.dart';
-import 'package:incoming_call_locker/core/constant/app_image_asset.dart';
 import 'package:incoming_call_locker/core/shared/custom_text.dart';
-import 'package:incoming_call_locker/core/shared/switch_button_enable_and_disable_lock.dart';
-import 'package:incoming_call_locker/view/widget/home/custom_check_permission.dart';
 import 'package:incoming_call_locker/view/widget/home/custom_home_app_bar.dart';
-import 'package:incoming_call_locker/view/widget/home/custom_set_screen_lock.dart';
 import 'package:incoming_call_locker/view/widget/home/permissions_section.dart';
 import 'package:incoming_call_locker/view/widget/home/set_passwords_section.dart';
-
 import '../../controller/home_screen_controller.dart';
-import '../widget/home/custom_app_bar_title.dart';
 import '../widget/home/calling_setting.dart';
 import '../widget/home/custom_list_tile_select_setting.dart';
 
